@@ -8,11 +8,13 @@ using UnityEngine.SceneManagement;
 
 namespace Uninstructed.UI.Handlers
 {
-    public class MapMainMenuHandler: MonoBehaviour
+    public class MapMainMenuHandlers: MenuHandlersBase
     {
+        protected override GameMenu CurrentMenu => GameMenu.MapMainMenu;
+
         public void HandleBack()
         {
-            SceneManager.LoadScene(SceneNames.Main);
+            OpenMenu(GameMenu.MainMenu);
         }
 
         public void HandleDelete()
@@ -22,7 +24,7 @@ namespace Uninstructed.UI.Handlers
 
         public void HandleCreate()
         {
-            SceneManager.LoadScene(SceneNames.MapCreate);
+            OpenMenu(GameMenu.MapCreateMenu);
         }
 
         public void HandleLoad()

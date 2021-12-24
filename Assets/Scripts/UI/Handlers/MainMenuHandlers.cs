@@ -5,16 +5,18 @@ using UnityEngine.SceneManagement;
 
 namespace Uninstructed.UI.Handlers
 {
-    public class MainMenuHandlers : MonoBehaviour
+    public class MainMenuHandlers : MenuHandlersBase
     {
+        protected override GameMenu CurrentMenu => GameMenu.MainMenu;
+
         public void HandlePlay()
         {
-            SceneManager.LoadScene(SceneNames.MapMain);
+            OpenMenu(GameMenu.MapMainMenu);
         }
 
         public void HandleInformation()
         {
-            SceneManager.LoadScene(SceneNames.Information);
+            OpenMenu(GameMenu.InfoMenu);
         }
 
         public void HandleExit()

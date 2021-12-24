@@ -8,8 +8,10 @@ using UnityEngine.SceneManagement;
 
 namespace Uninstructed.UI.Handlers
 {
-    public class MapCreateMenuHandler:MonoBehaviour
+    public class MapCreateMenuHandlers: MenuHandlersBase
     {
+        protected override GameMenu CurrentMenu => GameMenu.MapCreateMenu;
+
         public void HandleCreate()
         {
             //TODO
@@ -17,7 +19,7 @@ namespace Uninstructed.UI.Handlers
 
         public void HandleBack()
         {
-            SceneManager.LoadScene(SceneNames.MapMain);
+            OpenMenu(GameMenu.MapMainMenu);
         }
     }
 }
