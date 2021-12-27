@@ -1,21 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Uninstructed.Game.Saving;
+using Uninstructed.Game.Content.Enums;
 using UnityEngine;
 
 namespace Uninstructed.Game.Main
 {
-    public class Item : MonoBehaviour
+    public class Item : GameObjectBase<ItemType, ItemData>
     {
         [SerializeField, Min(1)]
         private int maxCount;
-
-        [SerializeField]
-        private string itemName;
-
         public int MaxCount { get => maxCount; }
-        public string ItemName { get => itemName; }
-        public string ShowName { get; set; }
+
 
         private int count;
         public int Count
@@ -24,18 +21,16 @@ namespace Uninstructed.Game.Main
             set
             {
                 count = Math.Clamp(value, 0, maxCount);
+                Optimize();
             }
+
         }
 
-        public void Start()
+        public override void Reset()
         {
-            ShowName = ItemName;
-        }
+            base.Reset();
 
-        public void Reset()
-        {
             maxCount = 1;
-            itemName = "Item Name";
         }
 
         public bool OnScene
@@ -52,18 +47,37 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        public bool CanUseSignle => UsedSingle != null;
+
         public event Action<Entity, Item> UsedSingle;
         public void Use(Entity user)
         {
             UsedSingle?.Invoke(user, this);
         }
 
-        public bool CanUseOnBlock => UsedOnBlock != null;
         public event Action<Entity, Item, Block> UsedOnBlock;
         public void UseOnBlock(Entity user, Block block)
         {
             UsedOnBlock?.Invoke(user, this, block);
+        }
+
+        protected override void LoadSub(ItemData memento)
+        {
+            Count = memento.Count;
+            OnScene = memento.X != null;
+            if (OnScene)
+            {
+                transform.position = new Vector3(memento.X.Value, memento.Y.Value);
+            }
+        }
+
+        protected override void SaveSub(ItemData memento)
+        {
+            memento.Count = Count;
+            if (OnScene)
+            {
+                memento.X = transform.position.x;
+                memento.Y = transform.position.y;
+            }
         }
     }
 }

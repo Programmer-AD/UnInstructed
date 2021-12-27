@@ -1,25 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Uninstructed.Game.Content.Enums;
+using Uninstructed.Game.Saving;
 using UnityEngine;
 
 namespace Uninstructed.Game.Main
 {
-    public class Block:MonoBehaviour
+    public class Block : GameObjectBase<BlockType, BlockData>
     {
         [SerializeField, Min(1)]
         private float maxDurability;
-        
+        public float MaxDurabilty => maxDurability;
+
         [SerializeField]
         private bool canBreak;
+        public bool CanBreak => canBreak;
 
         [SerializeField]
-        private string blockName;
-
-        public ParticleSystem BreakParticles;
-
-        public string BlockName { get => blockName; }
-        public string ShowName { get; set; }
+        private ParticleSystem BreakParticles;
 
         private float durability;
         public float Durability
@@ -36,21 +35,22 @@ namespace Uninstructed.Game.Main
         }
         public bool Broken { get; private set; }
 
-        public void Reset()
+        public override void Reset()
         {
+            base.Reset();
+
             canBreak = false;
-            blockName = "Block Name";
             maxDurability = 1;
         }
 
-        public void Start()
+        public override void Start()
         {
+            base.Start();
+
             durability = maxDurability;
-            ShowName = BlockName;
             Broken = false;
         }
 
-        public bool CanUseItem => UsedItem != null;
         public event Action<Entity, Item, Block> UsedItem;
         public void Use(Entity user, Item item)
         {
@@ -64,14 +64,26 @@ namespace Uninstructed.Game.Main
             {
                 if (BreakParticles != null)
                 {
-                    var deathParticles = Instantiate(BreakParticles, transform.position, transform.rotation);
-                    Destroy(deathParticles, deathParticles.main.duration);
+                    var breakParticles = Instantiate(BreakParticles, transform.position, transform.rotation);
+                    Destroy(breakParticles, breakParticles.main.duration);
                 }
 
                 Break?.Invoke(this);
                 Broken = true;
                 Destroy(gameObject);
             }
+        }
+
+        protected override void LoadSub(BlockData memento)
+        {
+            Durability = memento.Durability;
+            Broken = memento.Broken;
+        }
+
+        protected override void SaveSub(BlockData memento)
+        {
+            memento.Durability = durability;
+            memento.Broken = Broken;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Uninstructed.Game.Content.Enums;
 using UnityEngine;
 
 namespace Uninstructed.Game.Main
@@ -21,13 +22,14 @@ namespace Uninstructed.Game.Main
             }
         }
 
+        public int Size => slots.Length;
         public Item this[int index] => slots[index].Item;
 
         public void Add(Item item)
         {
             if (item.Count > 0)
             {
-                var canAddTo = slots.Where(x => !x.Empty && !x.Full && x.Item.ItemName == item.ItemName)
+                var canAddTo = slots.Where(x => !x.Empty && !x.Full && x.Item.Type == item.Type)
                     .OrderBy(x => x.Number).GetEnumerator();
                 while (item.Count > 0 && canAddTo.MoveNext())
                 {
@@ -52,18 +54,18 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        public int TotalCount(string name)
+        public int TotalCount(ItemType type)
         {
-            return slots.Where(x => !x.Empty && x.Item.ItemName == name)
+            return slots.Where(x => !x.Empty && x.Item.Type == type)
                 .Select(x => x.Item.Count).Sum();
         }
 
-        public int Remove(string name, int count)
+        public int Remove(ItemType type, int count)
         {
             if (count > 0)
             {
                 var toRemove = count;
-                var canRemoveFrom = slots.Where(x => !x.Empty && x.Item.ItemName == name)
+                var canRemoveFrom = slots.Where(x => !x.Empty && x.Item.Type == type)
                     .OrderByDescending(x => x.Number).GetEnumerator();
 
                 while (toRemove > 0 && canRemoveFrom.MoveNext())
