@@ -8,7 +8,7 @@ namespace Uninstructed.Game.Saving
 {
     public interface ISaveable<T> where T : class
     {
-        void Save(T memento);
+        T Save();
         void Load(T memento);
     }
 }

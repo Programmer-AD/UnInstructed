@@ -23,7 +23,11 @@ namespace Uninstructed.Game.Main
         }
 
         public int Size => slots.Length;
-        public Item this[int index] => slots[index].Item;
+        public Item this[int index]
+        {
+            get => slots[index].Item;
+            set => slots[index].Item = value;
+        }
 
         public void Add(Item item)
         {

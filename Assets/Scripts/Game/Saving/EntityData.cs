@@ -13,5 +13,7 @@ namespace Uninstructed.Game.Saving
         public float X, Y, Rotation, Health;
         public bool Dead;
         public int SelectedInventorySlot;
+
+        public ItemData[] Inventory;
     }
 }

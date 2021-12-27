@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Uninstructed.Game.Main
 {
     public abstract class GameObjectBase<TEnum, TMemento> : MonoBehaviour, ISaveable<TMemento>
-        where TEnum : Enum where TMemento : GameObjectData<TEnum>
+        where TEnum : Enum where TMemento : GameObjectData<TEnum>, new()
     {
         [SerializeField]
         private TEnum type;
@@ -36,7 +36,7 @@ namespace Uninstructed.Game.Main
         public void Load(TMemento memento)
         {
             type = memento.Type;
-            ShowName = memento.ShowName;
+            ShowName = memento.ShowName ?? defaultName;
 
             LoadSub(memento);
 
@@ -48,9 +48,10 @@ namespace Uninstructed.Game.Main
         }
         protected abstract void LoadSub(TMemento memento);
 
-        public void Save(TMemento memento)
+        public TMemento Save()
         {
-            if (ShowName != defaultName) 
+            var memento = new TMemento();
+            if (ShowName != defaultName)
             {
                 memento.ShowName = ShowName;
             }
@@ -62,6 +63,7 @@ namespace Uninstructed.Game.Main
             {
                 addition.Save(memento.Additionals);
             }
+            return memento;
         }
         protected abstract void SaveSub(TMemento memento);
     }

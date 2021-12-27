@@ -8,7 +8,7 @@ namespace Uninstructed.Game.Saving
 {
     public interface ISaveableAddition
     {
-        void Save(IDictionary<string, object> container);
-        void Load(IDictionary<string, object> container);
+        public void Save(IDictionary<string, object> data);
+        public void Load(IDictionary<string, object> data);
     }
 }
