@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Saving;
+using Uninstructed.Game.Saving.Models;
 using UnityEngine;
 
 namespace Uninstructed.Game.Main

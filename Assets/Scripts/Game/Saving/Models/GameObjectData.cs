@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Uninstructed.Game.Saving
+namespace Uninstructed.Game.Saving.Models
 {
     [Serializable]
     public class GameObjectData<TEnum>

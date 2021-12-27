@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Uninstructed.Game.Saving;
 using Uninstructed.Game.Content.Enums;
 using UnityEngine;
+using Uninstructed.Game.Saving.Models;
 
 namespace Uninstructed.Game.Main
 {

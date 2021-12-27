@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Uninstructed.Game.Main;
 
-namespace Uninstructed.Game.Saving
+namespace Uninstructed.Game.Saving.Models
 {
     [Serializable]
-    public class GameInstanceData
+    public class GameInstanceData:GameInstancePreviewData
     {
         public BlockData[,] Map;
-        public EntityData[] Entities { get; set; }
-        public ItemData[] DroppedItems { get; set; }
+        public EntityData[] Entities;
+        public ItemData[] DroppedItems;
     }
 }

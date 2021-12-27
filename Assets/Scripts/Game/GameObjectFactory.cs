@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Saving;
+using Uninstructed.Game.Saving.Models;
 using UnityEngine;
 
 namespace Uninstructed.Game
@@ -13,7 +14,7 @@ namespace Uninstructed.Game
     public class GameObjectFactory : MonoBehaviour
     {
         [SerializeField]
-        private string itemPrefabPath, entityPrefabPath, blockPrefabPath;
+        private string blockPrefabsPath, entityPrefabsPath, itemPrefabsPath;
 
         private IDictionary<ItemType, Item> items;
         private IDictionary<EntityType, Entity> entities;
@@ -21,16 +22,16 @@ namespace Uninstructed.Game
 
         public void Reset()
         {
-            itemPrefabPath = "Assets/Prefabs/";
-            entityPrefabPath = "Assets/Prefabs/";
-            blockPrefabPath = "Assets/Prefabs/";
+            blockPrefabsPath = "Assets/Prefabs/";
+            entityPrefabsPath = "Assets/Prefabs/";
+            itemPrefabsPath = "Assets/Prefabs/";
         }
 
         public void Start()
         {
-            items = GetStructured<ItemType, Item, ItemData>(itemPrefabPath);
-            entities = GetStructured<EntityType, Entity, EntityData>(entityPrefabPath);
-            blocks = GetStructured<BlockType, Block, BlockData>(blockPrefabPath);
+            items = GetStructured<ItemType, Item, ItemData>(itemPrefabsPath);
+            entities = GetStructured<EntityType, Entity, EntityData>(entityPrefabsPath);
+            blocks = GetStructured<BlockType, Block, BlockData>(blockPrefabsPath);
         }
 
         public Entity Create(EntityData data)
@@ -55,7 +56,7 @@ namespace Uninstructed.Game
 
         private TObject Create<TEnum, TObject, TMemento>(TMemento memento, IDictionary<TEnum, TObject> prefabs)
             where TObject : GameObjectBase<TEnum, TMemento>
-            where TMemento : GameObjectData<TEnum>
+            where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
         {
             var prefab = prefabs[memento.Type];
@@ -66,7 +67,7 @@ namespace Uninstructed.Game
 
         private IDictionary<TEnum, TObject> GetStructured<TEnum, TObject, TMemento>(string path)
             where TObject : GameObjectBase<TEnum, TMemento>
-            where TMemento : GameObjectData<TEnum>
+            where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
         {
             var objects = Resources.LoadAll<TObject>(path);
