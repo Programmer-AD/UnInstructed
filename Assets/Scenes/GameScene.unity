@@ -1111,6 +1111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a425c721d14e5ca4d92a02c54eeb6065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Tilemap: {fileID: 1658250317}
 --- !u!4 &1925972195
 Transform:
   m_ObjectHideFlags: 0

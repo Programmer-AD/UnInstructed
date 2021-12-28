@@ -43,7 +43,7 @@ namespace Uninstructed.Game.Saving.IO
             return (GameInstanceData)result;
         }
 
-        public static IList<GameInstancePreviewData> GetPreviewsList()
+        public static IList<GameInstancePreviewData> GetPreviewList()
         {
             var files = Directory.GetFiles(SaveLocation);
             var previewFiles = files.Where(x => x.EndsWith(FileFormat));
