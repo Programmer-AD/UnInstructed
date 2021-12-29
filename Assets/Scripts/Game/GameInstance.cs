@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Saving.Interfaces;
 using Uninstructed.Game.Saving.Models;
@@ -13,31 +14,27 @@ namespace Uninstructed.Game
 {
     public class GameInstance : MonoBehaviour, ISaveable<GameInstanceData>
     {
-        private GameObjectFactory factory;
-
         public Tilemap Tilemap;
 
-        public IList<Entity> Entities { get; set; }
-        public IList<Item> DroppedItems { get; set; }
+        public Entity Player { get; private set; }
+        public IList<Entity> Entities { get; private set; }
+        public IList<Item> DroppedItems { get; private set; }
         public string MapName { get; set; }
 
         public int MapWidth => Tilemap.cellBounds.size.x;
         public int MapHeight => Tilemap.cellBounds.size.y;
 
-        public void Start()
-        {
-            factory = GetComponent<GameObjectFactory>();
-        }
-
-        public void Load(GameInstanceData memento)
+        public void Load(GameInstanceData memento, GameObjectFactory factory)
         {
             MapName = memento.MapName;
-            Entities = memento.Entities.Select(x => factory.Create(x)).ToList();
-            DroppedItems = memento.DroppedItems.Select(x => factory.Create(x)).ToList();
-            LoadMap(memento.Map);
+            Entities = memento.Entities.Select(x => factory.Load(x)).ToList();
+            DroppedItems = memento.DroppedItems.Select(x => factory.Load(x)).ToList();
+            LoadMap(memento.Map, factory);
+
+            Player = Entities.First(x => x.Type == EntityType.Player);
         }
 
-        private void LoadMap(BlockData[,] map)
+        private void LoadMap(BlockData[,] map, GameObjectFactory factory)
         {
             var mapWidth = map.GetLength(0);
             var mapHeight = map.GetLength(1);
@@ -47,14 +44,12 @@ namespace Uninstructed.Game
             {
                 for (int x = 0; x < mapWidth; x++)
                 {
-                    var block = factory.Create(map[x, y]);
-                    var tile = new Tile()
-                    {
-                        gameObject = block.gameObject,
-                        sprite = block.GetComponent<SpriteRenderer>().sprite,
-                        colliderType = Tile.ColliderType.Sprite,
-                    };
-                    Tilemap.SetTile(new Vector3Int(x,y), tile);
+                    var block = factory.Load(map[x, y]);
+                    var tile = ScriptableObject.CreateInstance<Tile>();
+                    tile.gameObject = block.gameObject;
+                    tile.sprite = block.GetComponent<SpriteRenderer>().sprite;
+                    tile.colliderType = block.CanGoThrough ? Tile.ColliderType.None : Tile.ColliderType.Sprite;
+                    Tilemap.SetTile(new Vector3Int(x, y), tile);
                 }
             }
         }
@@ -63,10 +58,10 @@ namespace Uninstructed.Game
         {
             var memento = new GameInstanceData
             {
-                MapName=MapName,
+                MapName = MapName,
                 SaveDate = DateTime.Now,
                 DroppedItems = DroppedItems.Select(x => x.Save()).ToArray(),
-                Entities = Entities.Select(x => x.Save()).ToArray(),  
+                Entities = Entities.Select(x => x.Save()).ToArray(),
             };
             SaveMap(memento);
 

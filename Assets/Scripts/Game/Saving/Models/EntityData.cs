@@ -11,9 +11,7 @@ namespace Uninstructed.Game.Saving.Models
     public class EntityData : GameObjectData<EntityType>
     {
         public float X, Y, Rotation, Health;
-        public bool Dead;
         public int SelectedInventorySlot;
-
         public ItemData[] Inventory;
     }
 }

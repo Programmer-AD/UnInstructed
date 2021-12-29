@@ -61,7 +61,7 @@ namespace Uninstructed.Game.Main
             UsedOnBlock?.Invoke(user, this, block);
         }
 
-        protected override void LoadSub(ItemData memento)
+        protected override void LoadSub(ItemData memento, GameObjectFactory factory)
         {
             Count = memento.Count;
             OnScene = memento.X != null;

@@ -34,34 +34,36 @@ namespace Uninstructed.Game
             blocks = GetStructured<BlockType, Block, BlockData>(blockPrefabsPath);
         }
 
-        public Entity Create(EntityData data)
-        {
-            var result = Create(data, entities);
+        public Entity Load(EntityData data)
+            => Load(data, entities);
+        public Block Load(BlockData data) 
+            => Load(data, blocks);
+        public Item Load(ItemData data)
+            => Load(data, items);
 
-            int position = 0;
-            foreach(var itemData in data.Inventory)
-            {
-                if (itemData != null)
-                {
-                    result.Inventory[position++] = Create(itemData);
-                }
-            }
+        public Entity Create(EntityType type)
+            => Create(type, entities);
+        public Block Create(BlockType type)
+            => Create(type, blocks);
+        public Item Create(ItemType type)
+            => Create(type, items);
 
-            return result;
-        }
-        public Block Create(BlockData data) 
-            => Create(data, blocks);
-        public Item Create(ItemData data)
-            => Create(data, items);
-
-        private TObject Create<TEnum, TObject, TMemento>(TMemento memento, IDictionary<TEnum, TObject> prefabs)
+        private TObject Load<TEnum, TObject, TMemento>(TMemento memento, IDictionary<TEnum, TObject> prefabs)
             where TObject : GameObjectBase<TEnum, TMemento>
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
         {
-            var prefab = prefabs[memento.Type];
+            var result = Create(memento.Type, prefabs);
+            result.Load(memento, this);
+            return result;
+        }
+
+        private TObject Create<TEnum, TObject>(TEnum type, IDictionary<TEnum, TObject> prefabs)
+            where TObject : MonoBehaviour
+            where TEnum : Enum
+        {
+            var prefab = prefabs[type];
             var result = Instantiate(prefab);
-            result.Load(memento);
             return result;
         }
 

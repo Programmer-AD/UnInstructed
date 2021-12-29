@@ -11,6 +11,6 @@ namespace Uninstructed.Game.Saving.Models
     public class BlockData:GameObjectData<BlockType>
     {
         public float Durability;
-        public bool Broken;
+        public bool CanGoThrough;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Saving;
 using Uninstructed.Game.Saving.Models;
@@ -111,15 +112,23 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        protected override void LoadSub(EntityData memento)
+        protected override void LoadSub(EntityData memento, GameObjectFactory factory)
         {
             transform.SetPositionAndRotation(
-                new Vector2(memento.X, memento.Y), 
+                new Vector2(memento.X, memento.Y),
                 Quaternion.AngleAxis(memento.Rotation, Vector3.forward));
 
             Health = memento.Health;
             SelectedInventorySlot = memento.SelectedInventorySlot;
-            Dead = memento.Dead;
+
+            int position = 0;
+            foreach (var itemData in memento.Inventory)
+            {
+                if (itemData != null)
+                {
+                    Inventory[position++] = factory.Load(itemData);
+                }
+            }
         }
 
         protected override void SaveSub(EntityData memento)
@@ -128,9 +137,9 @@ namespace Uninstructed.Game.Main
             memento.Y = transform.position.y;
             memento.Rotation = transform.rotation.eulerAngles.z;
 
-            memento.Health=Health;
-            memento.SelectedInventorySlot=SelectedInventorySlot;
-            memento.Dead=Dead;
+            memento.Health = Health;
+            memento.SelectedInventorySlot = SelectedInventorySlot;
+            memento.Inventory = Inventory.Select(x => x.Save()).ToArray();
         }
     }
 }

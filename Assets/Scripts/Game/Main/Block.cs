@@ -18,6 +18,8 @@ namespace Uninstructed.Game.Main
         private bool canBreak;
         public bool CanBreak => canBreak;
 
+        public bool CanGoThrough;
+
         [SerializeField]
         private ParticleSystem BreakParticles;
 
@@ -75,16 +77,16 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        protected override void LoadSub(BlockData memento)
+        protected override void LoadSub(BlockData memento, GameObjectFactory factory)
         {
             Durability = memento.Durability;
-            Broken = memento.Broken;
+            CanGoThrough = memento.CanGoThrough;
         }
 
         protected override void SaveSub(BlockData memento)
         {
             memento.Durability = durability;
-            memento.Broken = Broken;
+            memento.CanGoThrough = CanGoThrough;
         }
     }
 }

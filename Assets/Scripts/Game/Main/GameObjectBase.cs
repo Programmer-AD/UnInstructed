@@ -35,20 +35,20 @@ namespace Uninstructed.Game.Main
             ShowName = defaultName;
         }
 
-        public void Load(TMemento memento)
+        public void Load(TMemento memento, GameObjectFactory factory)
         {
             type = memento.Type;
             ShowName = memento.ShowName ?? defaultName;
 
-            LoadSub(memento);
+            LoadSub(memento, factory);
 
             var additions = GetComponents<ISaveableAddition>();
             foreach (var addition in additions)
             {
-                addition.Load(memento.Additionals);
+                addition.Load(memento.Additionals, factory);
             }
         }
-        protected abstract void LoadSub(TMemento memento);
+        protected abstract void LoadSub(TMemento memento, GameObjectFactory factory);
 
         public TMemento Save()
         {
