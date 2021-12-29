@@ -2,10 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Uninstructed.Game.Content.Enums;
-using UnityEngine;
 
 namespace Uninstructed.Game.Main
 {
@@ -38,7 +35,7 @@ namespace Uninstructed.Game.Main
                 while (item.Count > 0 && canAddTo.MoveNext())
                 {
                     var slot = canAddTo.Current;
-                    var addCount = Math.Min(slot.CanAdd, item.Count);
+                    int addCount = Math.Min(slot.CanAdd, item.Count);
 
                     slot.Item.Count += addCount;
                     item.Count -= addCount;
@@ -68,14 +65,14 @@ namespace Uninstructed.Game.Main
         {
             if (count > 0)
             {
-                var toRemove = count;
+                int toRemove = count;
                 var canRemoveFrom = slots.Where(x => !x.Empty && x.Item.Type == type)
                     .OrderByDescending(x => x.Number).GetEnumerator();
 
                 while (toRemove > 0 && canRemoveFrom.MoveNext())
                 {
                     var slot = canRemoveFrom.Current;
-                    var removeCount = Math.Min(toRemove, slot.Item.Count);
+                    int removeCount = Math.Min(toRemove, slot.Item.Count);
                     slot.Item.Count -= removeCount;
                     toRemove -= removeCount;
                 }

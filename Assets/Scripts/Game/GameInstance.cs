@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Saving.Interfaces;
@@ -36,8 +34,8 @@ namespace Uninstructed.Game
 
         private void LoadMap(BlockData[,] map, GameObjectFactory factory)
         {
-            var mapWidth = map.GetLength(0);
-            var mapHeight = map.GetLength(1);
+            int mapWidth = map.GetLength(0);
+            int mapHeight = map.GetLength(1);
             Tilemap.ClearAllTiles();
 
             for (int y = 0; y < mapHeight; y++)

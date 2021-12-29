@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Uninstructed.UI
 {
-    public class MenuManager: MonoBehaviour
+    public class MenuManager : MonoBehaviour
     {
         private readonly IDictionary<GameMenu, GameObject> menus;
 
         public GameObject MenuContainer;
 
-        public MenuManager() { 
-            menus = new Dictionary<GameMenu,GameObject>();
+        public MenuManager()
+        {
+            menus = new Dictionary<GameMenu, GameObject>();
         }
 
         public void Start()
@@ -37,7 +35,7 @@ namespace Uninstructed.UI
             foreach (Transform childTransform in MenuContainer.transform)
             {
                 var child = childTransform.gameObject;
-                var childName = child.name;
+                string childName = child.name;
                 if (Enum.TryParse(childName, out GameMenu menu))
                 {
                     menus.Add(menu, child);

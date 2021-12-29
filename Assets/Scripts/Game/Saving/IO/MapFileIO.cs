@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using Uninstructed.Game.Saving.Models;
 using UnityEngine;
 
@@ -31,7 +29,7 @@ namespace Uninstructed.Game.Saving.IO
             {
                 fileName += FileFormat;
             }
-            var path = Path.Combine(SaveLocation, fileName);
+            string path = Path.Combine(SaveLocation, fileName);
             return path;
         }
 
@@ -47,20 +45,20 @@ namespace Uninstructed.Game.Saving.IO
         public GameInstancePreviewData LoadPreview(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            var result = formatter.Deserialize(stream);
+            object result = formatter.Deserialize(stream);
             return (GameInstancePreviewData)result;
         }
         public GameInstanceData Load(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            var preview = formatter.Deserialize(stream);
-            var result = formatter.Deserialize(stream);
+            object preview = formatter.Deserialize(stream);
+            object result = formatter.Deserialize(stream);
             return (GameInstanceData)result;
         }
 
         public IList<GameInstancePreviewData> GetPreviewList()
         {
-            var files = Directory.GetFiles(SaveLocation);
+            string[] files = Directory.GetFiles(SaveLocation);
             var previewFiles = files.Where(x => x.EndsWith(FileFormat));
             var previews = previewFiles.Select(file =>
             {

@@ -63,9 +63,9 @@ namespace Uninstructed.Game.Player.IO
 
         public async Task<string> ReadLineAsync()
         {
-            var result = await process.StandardOutput.ReadLineAsync();
+            string result = await process.StandardOutput.ReadLineAsync();
             ReadInput?.Invoke(result);
-            return result; 
+            return result;
         }
 
         public async Task WriteLineAsync(string data)

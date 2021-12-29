@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Uninstructed.Game.Content.Enums;
-using Uninstructed.Game.Saving;
 using Uninstructed.Game.Saving.Models;
 using UnityEngine;
 
@@ -24,7 +21,7 @@ namespace Uninstructed.Game.Main
         public bool CanDie => canDie;
 
         [SerializeField]
-        private ParticleSystem DeathParticles;
+        private readonly ParticleSystem DeathParticles;
 
         private float health;
         public float Health

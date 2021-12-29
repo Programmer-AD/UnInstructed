@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Uninstructed.Game;
 using Uninstructed.Game.Saving.Models;
 using UnityEngine;
@@ -19,7 +17,8 @@ namespace Uninstructed.UI.Components
         public GameDirector GameDirector { get; set; }
 
         private GameInstancePreviewData mapPreview;
-        public GameInstancePreviewData MapPreview { 
+        public GameInstancePreviewData MapPreview
+        {
             get => MapPreview;
             set
             {
