@@ -17,19 +17,9 @@ namespace Uninstructed.UI.Handlers
             OpenMenu(GameMenu.MainMenu);
         }
 
-        public void HandleDelete()
-        {
-            //TODO
-        }
-
         public void HandleCreate()
         {
             OpenMenu(GameMenu.MapCreateMenu);
-        }
-
-        public void HandleLoad()
-        {
-            //TODO
         }
     }
 }

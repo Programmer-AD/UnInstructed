@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Uninstructed.Game;
+using Uninstructed.Game.Saving.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,25 +15,42 @@ namespace Uninstructed.UI.Components
         [SerializeField]
         private TMPro.TMP_Text mapNameText, saveDateText;
 
-        public string MapName
-        {
-            get => mapNameText.text;
-            set => mapNameText.text = value;
-        }
+        public MapDeleteDialog DeleteDialog { get; set; }
+        public GameDirector GameDirector { get; set; }
 
-        public string SaveDate
-        {
-            get => saveDateText.text;
-            set => saveDateText.text = value;
+        private GameInstancePreviewData mapPreview;
+        public GameInstancePreviewData MapPreview { 
+            get => MapPreview;
+            set
+            {
+                mapPreview = value;
+                mapNameText.text = mapPreview.MapName;
+                saveDateText.text = mapPreview.SaveDate.ToString();
+            }
         }
-
-        public string MapFileName { get; set; }
 
         public void Reset()
         {
             startButton = null;
             deleteButton = null;
             mapNameText = null;
+            saveDateText = null;
+        }
+
+        public void Start()
+        {
+            startButton.onClick.AddListener(StartClick);
+            deleteButton.onClick.AddListener(DeleteClick);
+        }
+
+        private void StartClick()
+        {
+            GameDirector.LoadMap(mapPreview.MapName);
+        }
+
+        private void DeleteClick()
+        {
+            DeleteDialog.Open(mapPreview);
         }
     }
 }

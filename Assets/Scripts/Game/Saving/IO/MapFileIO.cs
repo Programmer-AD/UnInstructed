@@ -10,40 +10,55 @@ using UnityEngine;
 
 namespace Uninstructed.Game.Saving.IO
 {
-    public static class InstanceSaver
+    public class MapFileIO
     {
-        private static readonly BinaryFormatter formatter = new();
-        public static readonly string SaveLocation = Application.dataPath + "/PlayerSaves";
-        public static readonly string FileFormat = ".uninmap";
+        public static readonly string SaveLocation = Application.dataPath + "/PlayerSaves/";
+        public const string FileFormat = ".uninmap";
 
-        public static void Save(string fileName, GameInstanceData instanceData)
+        private readonly BinaryFormatter formatter = new();
+
+        public MapFileIO()
+        {
+            if (!Directory.Exists(SaveLocation))
+            {
+                Directory.CreateDirectory(SaveLocation);
+            }
+        }
+
+        public string GetSavePath(string fileName)
         {
             if (!fileName.EndsWith(FileFormat))
             {
                 fileName += FileFormat;
             }
-            using var stream = new FileStream($"{SaveLocation}/{fileName}", FileMode.Create, FileAccess.Write);
+            var path = Path.Combine(SaveLocation, fileName);
+            return path;
+        }
+
+        public void Save(string filePath, GameInstanceData instanceData)
+        {
+            using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             var previewData = (GameInstancePreviewData)instanceData;
             formatter.Serialize(stream, previewData);
             formatter.Serialize(stream, instanceData);
             stream.Flush();
         }
 
-        public static GameInstancePreviewData LoadPreview(string fileName)
+        public GameInstancePreviewData LoadPreview(string filePath)
         {
-            using var stream = new FileStream($"{SaveLocation}/{fileName}", FileMode.Create, FileAccess.Write);
+            using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             var result = formatter.Deserialize(stream);
             return (GameInstancePreviewData)result;
         }
-        public static GameInstanceData Load(string fileName)
+        public GameInstanceData Load(string filePath)
         {
-            using var stream = new FileStream($"{SaveLocation}/{fileName}", FileMode.Create, FileAccess.Write);
+            using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             var preview = formatter.Deserialize(stream);
             var result = formatter.Deserialize(stream);
             return (GameInstanceData)result;
         }
 
-        public static IList<GameInstancePreviewData> GetPreviewList()
+        public IList<GameInstancePreviewData> GetPreviewList()
         {
             var files = Directory.GetFiles(SaveLocation);
             var previewFiles = files.Where(x => x.EndsWith(FileFormat));
@@ -55,10 +70,11 @@ namespace Uninstructed.Game.Saving.IO
                     preview.FileName = file;
                     return preview;
                 }
-                catch (Exception) { 
+                catch (Exception)
+                {
                     return null;
                 }
-            }).Where(x=>x!=null).ToList();
+            }).Where(x => x != null).ToList();
             return previews;
         }
     }

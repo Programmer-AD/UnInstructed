@@ -22,9 +22,9 @@ namespace Uninstructed.Game
 
         public void Reset()
         {
-            blockPrefabsPath = "Assets/Prefabs/";
-            entityPrefabsPath = "Assets/Prefabs/";
-            itemPrefabsPath = "Assets/Prefabs/";
+            blockPrefabsPath = "Assets/Prefabs/Game/Block";
+            entityPrefabsPath = "Assets/Prefabs/Game/Entity";
+            itemPrefabsPath = "Assets/Prefabs/Game/Item";
         }
 
         public void Start()

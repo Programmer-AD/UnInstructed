@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Uninstructed.Game.Saving.IO;
 using Uninstructed.Game.Saving.Models;
+using Uninstructed.Game;
 
 namespace Uninstructed.UI.Components
 {
@@ -16,8 +17,10 @@ namespace Uninstructed.UI.Components
         [SerializeField]
         private MapListElement elementPrefab;
 
-        private ScrollRect scrollRect;
+        public MapDeleteDialog DeleteDialog;
 
+        private ScrollRect scrollRect;
+        private GameDirector gameDirector;
         private float elapsedTime;
 
         public void Reset()
@@ -28,6 +31,7 @@ namespace Uninstructed.UI.Components
 
         public void Start()
         {
+            gameDirector = FindObjectOfType<GameDirector>();
             scrollRect = GetComponent<ScrollRect>();
             elapsedTime = refreshTime;
         }
@@ -45,18 +49,18 @@ namespace Uninstructed.UI.Components
         private void RefreshList()
         {
             var listContent = scrollRect.content;
-            foreach(Transform item in listContent)
+            foreach (Transform item in listContent)
             {
                 Destroy(item.gameObject);
             }
 
-            var previews = InstanceSaver.GetPreviewList();
+            var previews = gameDirector.MapFileIO.GetPreviewList();
             foreach (var preview in previews)
             {
                 var element = Instantiate(elementPrefab, listContent);
-                element.MapName = preview.MapName;
-                element.SaveDate = preview.SaveDate.ToString();
-                element.MapFileName = preview.FileName;
+                element.MapPreview = preview;
+                element.DeleteDialog = DeleteDialog;
+                element.GameDirector = gameDirector;
             }
         }
     }
