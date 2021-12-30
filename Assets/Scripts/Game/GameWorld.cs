@@ -13,9 +13,6 @@ namespace Uninstructed.Game
 {
     public class GameWorld : MonoBehaviour, ISaveable<GameWorldData>
     {
-        [SerializeField]
-        private GameObject mapContainer;
-
         public IList<Entity> Entities { get; set; }
         public IList<Item> DroppedItems { get; set; }
         public Map Map { get; set; }
@@ -23,15 +20,10 @@ namespace Uninstructed.Game
 
         public Entity Player { get; private set; }
 
-        public void Reset()
-        {
-            mapContainer = null;
-        }
-
         public void Init()
         {
-            Map.InitPositions(mapContainer.transform);
-            Player = Entities.First(x => x.Type == EntityType.Player);
+            Map.InitPositions();
+            //Player = Entities.First(x => x.Type == EntityType.Player);
         }
 
         public void Load(GameWorldData memento, GameObjectFactory factory)

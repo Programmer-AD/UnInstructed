@@ -15,11 +15,10 @@ namespace Uninstructed.Game.Main
         private bool canBreak;
         public bool CanBreak => canBreak;
 
-        public Sprite Sprite;
         public bool CanGoThrough;
 
         [SerializeField]
-        private readonly ParticleSystem BreakParticles;
+        private ParticleSystem BreakParticles;
 
         private float durability;
         public float Durability

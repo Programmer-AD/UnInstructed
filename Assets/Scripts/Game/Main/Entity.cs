@@ -21,7 +21,7 @@ namespace Uninstructed.Game.Main
         public bool CanDie => canDie;
 
         [SerializeField]
-        private readonly ParticleSystem DeathParticles;
+        private ParticleSystem DeathParticles;
 
         private float health;
         public float Health

@@ -1,4 +1,5 @@
-﻿using Uninstructed.Game.Mapping;
+﻿using System;
+using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Saving.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,12 +8,15 @@ namespace Uninstructed.Game
 {
     public class GameDirector : MonoBehaviour
     {
+        [SerializeField]
+        private GameWorld worldPrefab;
+
         public WorldFileIO MapFileIO { get; private set; }
         public GameObjectFactory GameObjectFactory { get; private set; }
         public WorldGenerator WorldGenerator { get; private set; }
+        public GameWorld GameWorld { get; private set; }
 
         public string MapFileName { get; set; }
-        private GameWorld GameWorld { get; set; }
 
         public void Start()
         {
@@ -24,21 +28,20 @@ namespace Uninstructed.Game
 
         public void GenerateMap(GenerationSettings settings)
         {
-            SceneManager.LoadScene("GameScene");
-            GameWorld = FindObjectOfType<GameWorld>();
-
-            GameWorld.MapName = settings.MapName;
-            WorldGenerator.Generate(settings, GameWorld);
+            LoadGameSceneAsync(() =>
+            {
+                GameWorld.MapName = settings.MapName;
+                WorldGenerator.Generate(settings, GameWorld);
+            });
         }
 
         public void LoadMap(string mapFileName)
         {
-            MapFileName = mapFileName;
-            var instanceData = MapFileIO.Load(mapFileName);
-
-            SceneManager.LoadScene("GameScene");
-            GameWorld = FindObjectOfType<GameWorld>();
-            GameWorld.Load(instanceData, GameObjectFactory);
+            LoadGameSceneAsync(() => {
+                MapFileName = mapFileName;
+                var instanceData = MapFileIO.Load(mapFileName);
+                GameWorld.Load(instanceData, GameObjectFactory);
+            });
         }
 
         public void SaveMap(string filePath)
@@ -49,7 +52,20 @@ namespace Uninstructed.Game
 
         public void LoadMenus()
         {
+            Destroy(GameWorld);
             SceneManager.LoadScene("MainMenu");
+            GC.Collect();
+        }
+
+        private void LoadGameSceneAsync(Action onComplete)
+        {
+            var sceneLoading = SceneManager.LoadSceneAsync("GameScene");
+            sceneLoading.completed += (_) =>
+            {
+                GameWorld = Instantiate(worldPrefab);
+                onComplete();
+                GameWorld.Init();
+            };
         }
     }
 }

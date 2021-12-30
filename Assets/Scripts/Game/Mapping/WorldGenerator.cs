@@ -89,7 +89,7 @@ namespace Uninstructed.Game.Mapping
             }
             for (int i = 0; i < height; i++)
             {
-                simpleMap[0, i] = simpleMap[width - 1, 0] = BlockType.BorderWall;
+                simpleMap[0, i] = simpleMap[width - 1, i] = BlockType.BorderWall;
             }
         }
 

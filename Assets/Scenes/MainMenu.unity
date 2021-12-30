@@ -2799,6 +2799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee492bf3f55a84e499d3faf027c1bf65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldPrefab: {fileID: 246952134897403713, guid: 3a9a7155092338a428d7999cae8c0ed0, type: 3}
 --- !u!114 &1263197615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2811,9 +2812,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83bda203c1e932643b1d2e1b010a1659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockPrefabsPath: Assets/Prefabs/Game/Block
-  entityPrefabsPath: Assets/Prefabs/Game/Entity
-  itemPrefabsPath: Assets/Prefabs/Game/Item
+  blockPrefabsPath: Block
+  entityPrefabsPath: Entity
+  itemPrefabsPath: Item
 --- !u!4 &1263197616
 Transform:
   m_ObjectHideFlags: 0
