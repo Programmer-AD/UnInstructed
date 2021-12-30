@@ -13,7 +13,7 @@ namespace Uninstructed.UI.Components
         [SerializeField]
         private TMPro.TMP_Text mapInfoText;
 
-        private GameInstancePreviewData mapPreview;
+        private GameWorldPreviewData mapPreview;
 
         public bool Opened { get; private set; }
 
@@ -31,7 +31,7 @@ namespace Uninstructed.UI.Components
             Opened = false;
         }
 
-        public void Open(GameInstancePreviewData mapPreview)
+        public void Open(GameWorldPreviewData mapPreview)
         {
             if (!Opened)
             {

@@ -16,8 +16,8 @@ namespace Uninstructed.UI.Components
         public MapDeleteDialog DeleteDialog { get; set; }
         public GameDirector GameDirector { get; set; }
 
-        private GameInstancePreviewData mapPreview;
-        public GameInstancePreviewData MapPreview
+        private GameWorldPreviewData mapPreview;
+        public GameWorldPreviewData MapPreview
         {
             get => MapPreview;
             set

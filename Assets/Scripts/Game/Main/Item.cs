@@ -37,6 +37,16 @@ namespace Uninstructed.Game.Main
             set => gameObject.SetActive(value);
         }
 
+        public void OnTriggerEnter(Collider other)
+        {
+            var entity = other.GetComponent<Entity>();
+            if (entity != null)
+            {
+                entity.Inventory.Add(this);
+                Optimize();
+            }
+        }
+
         public void Optimize()
         {
             if (Count == 0)

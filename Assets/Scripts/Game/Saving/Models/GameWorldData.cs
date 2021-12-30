@@ -3,7 +3,7 @@
 namespace Uninstructed.Game.Saving.Models
 {
     [Serializable]
-    public class GameInstanceData : GameInstancePreviewData
+    public class GameWorldData : GameWorldPreviewData
     {
         public MapData Map;
         public EntityData[] Entities;

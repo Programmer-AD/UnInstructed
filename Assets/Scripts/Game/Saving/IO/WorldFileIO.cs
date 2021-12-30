@@ -8,14 +8,14 @@ using UnityEngine;
 
 namespace Uninstructed.Game.Saving.IO
 {
-    public class MapFileIO
+    public class WorldFileIO
     {
         public static readonly string SaveLocation = Application.dataPath + "/PlayerSaves/";
-        public const string FileFormat = ".uninmap";
+        public const string FileFormat = ".uninwrld";
 
         private readonly BinaryFormatter formatter = new();
 
-        public MapFileIO()
+        public WorldFileIO()
         {
             if (!Directory.Exists(SaveLocation))
             {
@@ -33,30 +33,30 @@ namespace Uninstructed.Game.Saving.IO
             return path;
         }
 
-        public void Save(string filePath, GameInstanceData instanceData)
+        public void Save(string filePath, GameWorldData instanceData)
         {
             using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            var previewData = (GameInstancePreviewData)instanceData;
+            var previewData = (GameWorldPreviewData)instanceData;
             formatter.Serialize(stream, previewData);
             formatter.Serialize(stream, instanceData);
             stream.Flush();
         }
 
-        public GameInstancePreviewData LoadPreview(string filePath)
+        public GameWorldPreviewData LoadPreview(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             object result = formatter.Deserialize(stream);
-            return (GameInstancePreviewData)result;
+            return (GameWorldPreviewData)result;
         }
-        public GameInstanceData Load(string filePath)
+        public GameWorldData Load(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             object preview = formatter.Deserialize(stream);
             object result = formatter.Deserialize(stream);
-            return (GameInstanceData)result;
+            return (GameWorldData)result;
         }
 
-        public IList<GameInstancePreviewData> GetPreviewList()
+        public IList<GameWorldPreviewData> GetPreviewList()
         {
             string[] files = Directory.GetFiles(SaveLocation);
             var previewFiles = files.Where(x => x.EndsWith(FileFormat));

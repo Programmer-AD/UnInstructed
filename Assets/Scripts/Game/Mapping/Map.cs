@@ -17,6 +17,14 @@ namespace Uninstructed.Game.Mapping
         public int Width { get; private set; }
         public int Height { get; private set; }
 
+        public Map() { }
+        public Map(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Blocks = new Block[Width * Height];
+        }
+
         public Block this[int x, int y]
         {
             get => Blocks[y * Width + x];
@@ -27,7 +35,7 @@ namespace Uninstructed.Game.Mapping
         {
             Width = memento.Width;
             Height = memento.Height;
-            Blocks = memento.Blocks.Select(x => factory.Load(x)).ToArray();
+            Blocks = memento.Blocks.Select(x => factory?.Load(x)).ToArray();
         }
 
         public void InitPositions(Transform parent)
@@ -36,8 +44,12 @@ namespace Uninstructed.Game.Mapping
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    this[x, y].transform.SetParent(parent);
-                    this[x, y].transform.localPosition = new Vector3(x, y);
+                    var block = this[x, y];
+                    if (block != null)
+                    {
+                        block.transform.SetParent(parent);
+                        block.transform.localPosition = new Vector3(x, y);
+                    }
                 }
             }
         }
@@ -48,7 +60,7 @@ namespace Uninstructed.Game.Mapping
             {
                 Width = Width,
                 Height = Height,
-                Blocks = Blocks.Select(x => x.Save()).ToArray(),
+                Blocks = Blocks.Select(x => x?.Save()).ToArray(),
             };
 
             return memento;

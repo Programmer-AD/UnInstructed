@@ -11,33 +11,41 @@ using UnityEngine.Tilemaps;
 
 namespace Uninstructed.Game
 {
-    public class GameInstance : MonoBehaviour, ISaveable<GameInstanceData>
+    public class GameWorld : MonoBehaviour, ISaveable<GameWorldData>
     {
         [SerializeField]
         private GameObject mapContainer;
 
-        public IList<Entity> Entities { get; private set; }
-        public IList<Item> DroppedItems { get; private set; }
-        public Map Map { get; private set; }
+        public IList<Entity> Entities { get; set; }
+        public IList<Item> DroppedItems { get; set; }
+        public Map Map { get; set; }
         public string MapName { get; set; }
 
         public Entity Player { get; private set; }
 
-        public void Load(GameInstanceData memento, GameObjectFactory factory)
+        public void Reset()
+        {
+            mapContainer = null;
+        }
+
+        public void Init()
+        {
+            Map.InitPositions(mapContainer.transform);
+            Player = Entities.First(x => x.Type == EntityType.Player);
+        }
+
+        public void Load(GameWorldData memento, GameObjectFactory factory)
         {
             MapName = memento.MapName;
             Entities = memento.Entities.Select(x => factory.Load(x)).ToList();
             DroppedItems = memento.DroppedItems.Select(x => factory.Load(x)).ToList();
             Map = new Map();
             Map.Load(memento.Map, factory);
-
-            Map.InitPositions(mapContainer.transform);
-            Player = Entities.First(x => x.Type == EntityType.Player);
         }
 
-        public GameInstanceData Save()
+        public GameWorldData Save()
         {
-            var memento = new GameInstanceData
+            var memento = new GameWorldData
             {
                 MapName = MapName,
                 SaveDate = DateTime.Now,

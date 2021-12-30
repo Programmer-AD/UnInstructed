@@ -6,17 +6,17 @@ namespace Uninstructed.Game
 {
     public class GameDirector : MonoBehaviour
     {
-        public MapFileIO MapFileIO { get; private set; }
+        public WorldFileIO MapFileIO { get; private set; }
         public GameObjectFactory GameObjectFactory { get; private set; }
 
         public string MapFileName { get; set; }
-        private GameInstance GameInstance { get; set; }
+        private GameWorld GameInstance { get; set; }
 
 
         public void Start()
         {
             DontDestroyOnLoad(gameObject);
-            MapFileIO = new MapFileIO();
+            MapFileIO = new WorldFileIO();
             GameObjectFactory = GetComponent<GameObjectFactory>();
         }
 
@@ -26,7 +26,7 @@ namespace Uninstructed.Game
             var instanceData = MapFileIO.Load(mapFileName);
 
             SceneManager.LoadScene("GameScene");
-            GameInstance = FindObjectOfType<GameInstance>();
+            GameInstance = FindObjectOfType<GameWorld>();
             GameInstance.Load(instanceData, GameObjectFactory);
         }
 

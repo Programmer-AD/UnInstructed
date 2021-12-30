@@ -2,7 +2,9 @@
 {
     public enum BlockType : uint
     {
-        Empty,
+        Empty = 0,
+        
+        BorderWall,
 
         Unknown = uint.MaxValue,
     }

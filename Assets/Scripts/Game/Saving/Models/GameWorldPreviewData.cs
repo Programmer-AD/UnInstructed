@@ -3,7 +3,7 @@
 namespace Uninstructed.Game.Saving.Models
 {
     [Serializable]
-    public class GameInstancePreviewData
+    public class GameWorldPreviewData
     {
         public string MapName;
         public DateTime SaveDate;
