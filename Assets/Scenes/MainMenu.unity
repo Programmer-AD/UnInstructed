@@ -576,7 +576,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &219777278
@@ -3852,6 +3852,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 899657815}
     m_Modifications:
+    - target: {fileID: 6091530736557641929, guid: d2527887f3b706f4c9fbc391f42224ff, type: 3}
+      propertyPath: m_Text
+      value: "\u041D\u043E\u0432\u0430\u044F \u043A\u0430\u0440\u0442\u0430"
+      objectReference: {fileID: 0}
     - target: {fileID: 6091530737221679834, guid: d2527887f3b706f4c9fbc391f42224ff, type: 3}
       propertyPath: m_text
       value: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435:"

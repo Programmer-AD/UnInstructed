@@ -72,7 +72,7 @@ namespace Uninstructed.Game.Saving.IO
                 {
                     return null;
                 }
-            }).Where(x => x != null).ToList();
+            }).Where(x => x != null).OrderBy(x => x.MapName).ToList();
             return previews;
         }
     }

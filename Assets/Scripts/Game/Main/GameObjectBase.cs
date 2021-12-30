@@ -44,8 +44,6 @@ namespace Uninstructed.Game.Main
             {
                 addition.Load(memento.Additionals, factory);
             }
-
-            loaded = true;
         }
         protected abstract void LoadSub(TMemento memento, GameObjectFactory factory);
 

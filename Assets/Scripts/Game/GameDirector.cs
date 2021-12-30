@@ -19,7 +19,7 @@ namespace Uninstructed.Game
             DontDestroyOnLoad(gameObject);
             MapFileIO = new WorldFileIO();
             GameObjectFactory = GetComponent<GameObjectFactory>();
-            WorldGenerator=new WorldGenerator(GameObjectFactory);
+            WorldGenerator = new WorldGenerator(GameObjectFactory);
         }
 
         public void GenerateMap(GenerationSettings settings)
@@ -27,6 +27,7 @@ namespace Uninstructed.Game
             SceneManager.LoadScene("GameScene");
             GameWorld = FindObjectOfType<GameWorld>();
 
+            GameWorld.MapName = settings.MapName;
             WorldGenerator.Generate(settings, GameWorld);
         }
 
@@ -40,10 +41,10 @@ namespace Uninstructed.Game
             GameWorld.Load(instanceData, GameObjectFactory);
         }
 
-        public void SaveMap(string saveName)
+        public void SaveMap(string filePath)
         {
             var instanceData = GameWorld.Save();
-            MapFileIO.Save(saveName, instanceData);
+            MapFileIO.Save(filePath, instanceData);
         }
 
         public void LoadMenus()
