@@ -15,6 +15,7 @@ namespace Uninstructed.Game.Main
         private bool canBreak;
         public bool CanBreak => canBreak;
 
+        public Sprite Sprite;
         public bool CanGoThrough;
 
         [SerializeField]
