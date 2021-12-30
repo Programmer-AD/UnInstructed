@@ -15,7 +15,7 @@ namespace Uninstructed.UI.Components
 
         private GameWorldPreviewData mapPreview;
 
-        public bool Opened { get; private set; }
+        public bool Opened => gameObject.activeSelf;
 
         public void Reset()
         {
@@ -28,7 +28,7 @@ namespace Uninstructed.UI.Components
         {
             yesButton.onClick.AddListener(OnClickYes);
             noButton.onClick.AddListener(OnClickNo);
-            Opened = false;
+            gameObject.SetActive(false);
         }
 
         public void Open(GameWorldPreviewData mapPreview)
@@ -38,7 +38,6 @@ namespace Uninstructed.UI.Components
                 this.mapPreview = mapPreview;
                 mapInfoText.text = $"Вы действительно хотите удалить карту \"{mapPreview.MapName}\" сохранённую {mapPreview.SaveDate}?";
                 gameObject.SetActive(true);
-                Opened = true;
             }
         }
 
@@ -47,7 +46,6 @@ namespace Uninstructed.UI.Components
             if (!Opened)
             {
                 gameObject.SetActive(true);
-                Opened = false;
             }
         }
 

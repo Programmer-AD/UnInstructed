@@ -18,6 +18,7 @@ namespace Uninstructed.UI
         public void Start()
         {
             LoadMenus();
+            menus[GameMenu.MainMenu].SetActive(true);
         }
 
         public void Open(GameMenu current, GameMenu menu)
@@ -39,6 +40,7 @@ namespace Uninstructed.UI
                 if (Enum.TryParse(childName, out GameMenu menu))
                 {
                     menus.Add(menu, child);
+                    child.SetActive(false);
                 }
             }
         }

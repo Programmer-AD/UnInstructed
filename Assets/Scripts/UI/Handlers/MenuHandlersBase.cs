@@ -8,10 +8,12 @@ namespace Uninstructed.UI.Handlers
 
         protected abstract GameMenu CurrentMenu { get; }
 
-        public void Start()
+        public virtual void Start()
         {
             menuManager = GetComponent<MenuManager>();
         }
+
+        public virtual void Reset() { }
 
         protected void OpenMenu(GameMenu menu)
         {
