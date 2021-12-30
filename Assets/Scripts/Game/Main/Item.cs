@@ -87,5 +87,7 @@ namespace Uninstructed.Game.Main
                 memento.Y = transform.position.y;
             }
         }
+
+        protected override void InitDefaultSub(GameObjectFactory factory){}
     }
 }

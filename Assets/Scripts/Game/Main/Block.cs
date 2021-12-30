@@ -44,14 +44,6 @@ namespace Uninstructed.Game.Main
             maxDurability = 1;
         }
 
-        public override void Start()
-        {
-            base.Start();
-
-            durability = maxDurability;
-            Broken = false;
-        }
-
         public event Action<Entity, Item, Block> UsedItem;
         public void Use(Entity user, Item item)
         {
@@ -85,6 +77,12 @@ namespace Uninstructed.Game.Main
         {
             memento.Durability = durability;
             memento.CanGoThrough = CanGoThrough;
+        }
+
+        protected override void InitDefaultSub(GameObjectFactory factory)
+        {
+            durability = maxDurability;
+            Broken = false;
         }
     }
 }

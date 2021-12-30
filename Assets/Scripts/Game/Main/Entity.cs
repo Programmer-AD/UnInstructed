@@ -60,19 +60,6 @@ namespace Uninstructed.Game.Main
             canDie = true;
         }
 
-        public override void Start()
-        {
-            base.Start();
-
-            health = maxHealth;
-            selectedInventorySlot = 0;
-            Dead = false;
-            if (inventorySize > 0)
-            {
-                Inventory = new Inventory(inventorySize);
-            }
-        }
-
         public void UseItem()
         {
             if (HandItem != null)
@@ -109,6 +96,17 @@ namespace Uninstructed.Game.Main
             }
         }
 
+        protected override void SaveSub(EntityData memento)
+        {
+            memento.X = transform.position.x;
+            memento.Y = transform.position.y;
+            memento.Rotation = transform.rotation.eulerAngles.z;
+
+            memento.Health = Health;
+            memento.SelectedInventorySlot = SelectedInventorySlot;
+            memento.Inventory = Inventory.Select(x => x.Save()).ToArray();
+        }
+
         protected override void LoadSub(EntityData memento, GameObjectFactory factory)
         {
             transform.SetPositionAndRotation(
@@ -117,6 +115,7 @@ namespace Uninstructed.Game.Main
 
             Health = memento.Health;
             SelectedInventorySlot = memento.SelectedInventorySlot;
+            Inventory = new Inventory(inventorySize);
 
             int position = 0;
             foreach (var itemData in memento.Inventory)
@@ -128,15 +127,15 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        protected override void SaveSub(EntityData memento)
+        protected override void InitDefaultSub(GameObjectFactory factory)
         {
-            memento.X = transform.position.x;
-            memento.Y = transform.position.y;
-            memento.Rotation = transform.rotation.eulerAngles.z;
-
-            memento.Health = Health;
-            memento.SelectedInventorySlot = SelectedInventorySlot;
-            memento.Inventory = Inventory.Select(x => x.Save()).ToArray();
+            health = maxHealth;
+            selectedInventorySlot = 0;
+            Dead = false;
+            if (inventorySize > 0)
+            {
+                Inventory = new Inventory(inventorySize);
+            }
         }
     }
 }

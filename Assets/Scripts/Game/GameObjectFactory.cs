@@ -39,28 +39,30 @@ namespace Uninstructed.Game
             => Load(data, items);
 
         public Entity Create(EntityType type)
-            => Create(type, entities);
+            => Create<EntityType, EntityData, Entity>(type, entities);
         public Block Create(BlockType type)
-            => Create(type, blocks);
+            => Create<BlockType, BlockData, Block>(type, blocks);
         public Item Create(ItemType type)
-            => Create(type, items);
+            => Create<ItemType, ItemData, Item>(type, items);
 
         private TObject Load<TEnum, TObject, TMemento>(TMemento memento, IDictionary<TEnum, TObject> prefabs)
             where TObject : GameObjectBase<TEnum, TMemento>
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
         {
-            var result = Create(memento.Type, prefabs);
+            var result = prefabs[memento.Type];
             result.Load(memento, this);
             return result;
         }
 
-        private TObject Create<TEnum, TObject>(TEnum type, IDictionary<TEnum, TObject> prefabs)
-            where TObject : MonoBehaviour
+        private TObject Create<TEnum, TMemento, TObject>(TEnum type, IDictionary<TEnum, TObject> prefabs)
+            where TObject : GameObjectBase<TEnum, TMemento>
+            where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
         {
             var prefab = prefabs[type];
             var result = Instantiate(prefab);
+            result.InitDefault(this);
             return result;
         }
 

@@ -24,10 +24,13 @@ namespace Uninstructed.Game.Main
             defaultName = "Default name";
         }
 
-        public virtual void Start()
+        public void InitDefault(GameObjectFactory factory)
         {
             ShowName = defaultName;
+
+            InitDefaultSub(factory);
         }
+        protected abstract void InitDefaultSub(GameObjectFactory factory);
 
         public void Load(TMemento memento, GameObjectFactory factory)
         {
@@ -41,6 +44,8 @@ namespace Uninstructed.Game.Main
             {
                 addition.Load(memento.Additionals, factory);
             }
+
+            loaded = true;
         }
         protected abstract void LoadSub(TMemento memento, GameObjectFactory factory);
 
