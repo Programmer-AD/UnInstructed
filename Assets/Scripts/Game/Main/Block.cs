@@ -41,6 +41,7 @@ namespace Uninstructed.Game.Main
 
             canBreak = false;
             maxDurability = 1;
+            BreakParticles = null;
         }
 
         public event Action<Entity, Item, Block> UsedItem;

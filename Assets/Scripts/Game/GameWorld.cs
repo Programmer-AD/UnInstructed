@@ -23,6 +23,7 @@ namespace Uninstructed.Game
         public void Init()
         {
             Map.InitPositions();
+#warning "Dont forget to uncomment this when player prefab ready"
             //Player = Entities.First(x => x.Type == EntityType.Player);
         }
 

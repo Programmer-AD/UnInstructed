@@ -26,6 +26,11 @@ namespace Uninstructed.Game
             WorldGenerator = new WorldGenerator(GameObjectFactory);
         }
 
+        public void Reset()
+        {
+            worldPrefab = null;
+        }
+
         public void GenerateMap(GenerationSettings settings)
         {
             LoadGameSceneAsync(() =>

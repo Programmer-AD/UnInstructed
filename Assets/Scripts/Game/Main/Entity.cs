@@ -58,6 +58,7 @@ namespace Uninstructed.Game.Main
             maxHealth = 100;
             inventorySize = 1;
             canDie = true;
+            DeathParticles = null;
         }
 
         public void UseItem()
