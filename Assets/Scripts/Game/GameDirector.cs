@@ -20,6 +20,12 @@ namespace Uninstructed.Game
 
         public void Start()
         {
+            var existingDirector = FindObjectOfType<GameDirector>();
+            if (existingDirector != this && existingDirector != null)
+            {
+                Destroy(this);
+                return;
+            }
             DontDestroyOnLoad(gameObject);
             MapFileIO = new WorldFileIO();
             GameObjectFactory = GetComponent<GameObjectFactory>();
@@ -42,17 +48,19 @@ namespace Uninstructed.Game
 
         public void LoadMap(string mapFileName)
         {
-            LoadGameSceneAsync(() => {
+            LoadGameSceneAsync(() =>
+            {
                 MapFileName = mapFileName;
                 var instanceData = MapFileIO.Load(mapFileName);
                 GameWorld.Load(instanceData, GameObjectFactory);
             });
         }
 
-        public void SaveMap(string filePath)
+        public void SaveMap(string fileName)
         {
             var instanceData = GameWorld.Save();
-            MapFileIO.Save(filePath, instanceData);
+            var path = MapFileIO.GetSavePath(fileName);
+            MapFileIO.Save(path, instanceData);
         }
 
         public void LoadMenus()

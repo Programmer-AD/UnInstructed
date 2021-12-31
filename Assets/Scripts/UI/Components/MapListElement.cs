@@ -44,7 +44,7 @@ namespace Uninstructed.UI.Components
 
         private void StartClick()
         {
-            GameDirector.LoadMap(mapPreview.MapName);
+            GameDirector.LoadMap(mapPreview.FileName);
         }
 
         private void DeleteClick()

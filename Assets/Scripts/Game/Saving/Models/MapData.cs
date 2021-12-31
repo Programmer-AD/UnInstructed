@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Uninstructed.Game.Saving.Models
 {
+    [Serializable]
     public class MapData
     {
         public int Width, Height;

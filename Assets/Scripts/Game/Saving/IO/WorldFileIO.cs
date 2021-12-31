@@ -39,18 +39,18 @@ namespace Uninstructed.Game.Saving.IO
             var previewData = (GameWorldPreviewData)instanceData;
             formatter.Serialize(stream, previewData);
             formatter.Serialize(stream, instanceData);
-            stream.Flush();
+            stream.Close();
         }
 
         public GameWorldPreviewData LoadPreview(string filePath)
         {
-            using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             object result = formatter.Deserialize(stream);
             return (GameWorldPreviewData)result;
         }
         public GameWorldData Load(string filePath)
         {
-            using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             object preview = formatter.Deserialize(stream);
             object result = formatter.Deserialize(stream);
             return (GameWorldData)result;
@@ -72,7 +72,7 @@ namespace Uninstructed.Game.Saving.IO
                 {
                     return null;
                 }
-            }).Where(x => x != null).OrderBy(x => x.MapName).ToList();
+            }).Where(x => x != null).OrderByDescending(x => x.SaveDate).ToList();
             return previews;
         }
     }

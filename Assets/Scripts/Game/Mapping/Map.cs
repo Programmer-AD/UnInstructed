@@ -35,7 +35,7 @@ namespace Uninstructed.Game.Mapping
         {
             Width = memento.Width;
             Height = memento.Height;
-            Blocks = memento.Blocks.Select(x => factory.Load(x)).ToArray();
+            Blocks = memento.Blocks.Select(x => x!=null?factory.Load(x):null).ToArray();
         }
 
         public void InitPositions()
