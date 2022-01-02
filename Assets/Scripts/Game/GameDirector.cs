@@ -120,7 +120,7 @@ namespace Uninstructed.Game
             yield return null;
 
             onComplete();
-            buildingScreen.SetProgress(0.70f);
+            buildingScreen.SetProgress(0.5f);
             yield return null;
 
             GameWorld.Init();
