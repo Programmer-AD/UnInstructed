@@ -1,11 +1,13 @@
+using System;
 using System.IO;
 using Uninstructed.Game.Saving.Models;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Uninstructed.UI.Components
+namespace Uninstructed.UI.Components.Dialogs
 {
-    public class MapDeleteDialog : MonoBehaviour
+    public class MapDeleteDialog : DialogBase
     {
         [SerializeField]
         private Button yesButton, noButton;
@@ -15,20 +17,18 @@ namespace Uninstructed.UI.Components
 
         private GameWorldPreviewData mapPreview;
 
-        public bool Opened => gameObject.activeSelf;
 
-        public void Reset()
+        public override void Reset()
         {
             yesButton = null;
             noButton = null;
             mapInfoText = null;
         }
 
-        public void Start()
+        public override void Start()
         {
             yesButton.onClick.AddListener(OnClickYes);
             noButton.onClick.AddListener(OnClickNo);
-            gameObject.SetActive(false);
         }
 
         public void Open(GameWorldPreviewData mapPreview)
@@ -36,16 +36,8 @@ namespace Uninstructed.UI.Components
             if (!Opened)
             {
                 this.mapPreview = mapPreview;
-                mapInfoText.text = $"Вы действительно хотите удалить карту \"{mapPreview.MapName}\" сохранённую {mapPreview.SaveDate}?";
-                gameObject.SetActive(true);
-            }
-        }
-
-        public void Close()
-        {
-            if (!Opened)
-            {
-                gameObject.SetActive(true);
+                mapInfoText.text = $"Вы действительно хотите удалить карту \r\n\"{mapPreview.MapName}\"\r\n сохранённую {mapPreview.SaveDate}?";
+                Opened = true;
             }
         }
 
@@ -54,13 +46,17 @@ namespace Uninstructed.UI.Components
             if (File.Exists(mapPreview.FileName))
             {
                 File.Delete(mapPreview.FileName);
+                Deleted.Invoke();
             }
-            Close();
+            
+            Opened = false;
         }
 
         private void OnClickNo()
         {
-            Close();
+            Opened = false;
         }
+
+        public UnityEvent Deleted;
     }
 }

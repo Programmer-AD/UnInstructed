@@ -17,7 +17,8 @@ namespace Uninstructed.UI.Components
         [SerializeField]
         private Image sidePanel;
 
-        private GameDirector director;
+        [SerializeField]
+        private GameSceneManager sceneManager;
 
         private bool Opened => sidePanel.gameObject.activeSelf;
 
@@ -25,17 +26,17 @@ namespace Uninstructed.UI.Components
         {
             menuButton = null;
             sidePanel = null;
+            sceneManager = null;
         }
 
         public void Start()
         {
             SetOpen(false);
-            director = FindObjectOfType<GameDirector>();
         }
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) && !sceneManager.AnyDialogOpened)
             {
                 SetOpen(!Opened);
             }
@@ -52,17 +53,17 @@ namespace Uninstructed.UI.Components
 
         public void HandleStart()
         {
-
+            sceneManager.ProgramLoadDialog.Open();
         }
 
         public void HandleSave()
         {
-            director.SaveMap("test");
+            sceneManager.MapSaveDialog.Open();
         }
 
         public void HandleExit()
         {
-            director.LoadMenus();
+            sceneManager.PlayExitDialog.Open();
         }
     }
 }

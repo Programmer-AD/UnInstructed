@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Saving.IO;
+using Uninstructed.UI.Components;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace Uninstructed.Game
@@ -72,13 +75,48 @@ namespace Uninstructed.Game
 
         private void LoadGameSceneAsync(Action onComplete)
         {
+            StartCoroutine(SceneLoading(onComplete));
+        }
+
+        private IEnumerator SceneLoading(Action onComplete)
+        {
+            var loadingScreen = FindObjectOfType<LoadingScreen>(true);
+
+            loadingScreen.Open();
             var sceneLoading = SceneManager.LoadSceneAsync("GameScene");
-            sceneLoading.completed += (_) =>
+            sceneLoading.allowSceneActivation = false;
+
+            var progress = sceneLoading.progress;
+            while (!sceneLoading.isDone)
             {
-                GameWorld = Instantiate(worldPrefab);
-                onComplete();
-                GameWorld.Init();
-            };
+                var newProgress = sceneLoading.progress;
+                if (progress != newProgress)
+                {
+                    progress = newProgress;
+                    loadingScreen.SetProgress(progress);
+                }
+
+                if (progress >= 0.9f)
+                {
+                    loadingScreen.Close();
+                    sceneLoading.allowSceneActivation = true;
+                }
+
+                yield return new WaitForSeconds(.05f);
+            }
+
+            var buildingScreen = FindObjectOfType<LoadingScreen>(true);
+            buildingScreen.Open();
+
+            GameWorld = Instantiate(worldPrefab);
+            buildingScreen.SetProgress(0.1f);
+
+            onComplete();
+            buildingScreen.SetProgress(0.85f);
+
+            GameWorld.Init();
+            buildingScreen.SetProgress(1f);
+            buildingScreen.Close();
         }
     }
 }

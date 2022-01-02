@@ -1,4 +1,6 @@
+using System;
 using Uninstructed.Game;
+using Uninstructed.UI.Components.Dialogs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +33,15 @@ namespace Uninstructed.UI.Components
             elapsedTime = refreshTime;
         }
 
+        public void OnEnable()
+        {
+            try
+            {
+                RefreshList();
+            }
+            catch (Exception) { }
+        }
+
         public void Update()
         {
             elapsedTime += Time.deltaTime;
@@ -39,6 +50,11 @@ namespace Uninstructed.UI.Components
                 elapsedTime -= refreshTime;
                 RefreshList();
             }
+        }
+
+        public void OnElementDelete()
+        {
+            RefreshList();
         }
 
         private void RefreshList()

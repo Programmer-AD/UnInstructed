@@ -1,21 +1,26 @@
-using Uninstructed.Game;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Uninstructed.Game.Saving.Models;
+using Uninstructed.Game;
 using Uninstructed.UI.Components.Dialogs;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 namespace Uninstructed.UI.Components
 {
-    public class MapListElement : MonoBehaviour
+    public class SaveListElement:MonoBehaviour
     {
         [SerializeField]
-        private Button startButton, deleteButton;
+        private Button clickableBackground;
 
         [SerializeField]
         private TMPro.TMP_Text mapNameText, saveDateText;
 
-        public MapDeleteDialog DeleteDialog { get; set; }
-        public GameDirector GameDirector { get; set; }
+        public SaverElement SaverElement { get; set; }
 
         private GameWorldPreviewData mapPreview;
         public GameWorldPreviewData MapPreview
@@ -31,26 +36,20 @@ namespace Uninstructed.UI.Components
 
         public void Reset()
         {
-            startButton = null;
-            deleteButton = null;
             mapNameText = null;
             saveDateText = null;
+            clickableBackground = null;
         }
 
         public void Start()
         {
-            startButton.onClick.AddListener(StartClick);
-            deleteButton.onClick.AddListener(DeleteClick);
+            clickableBackground.onClick.AddListener(OnElementSelect);
         }
 
-        private void StartClick()
+        private void OnElementSelect()
         {
-            GameDirector.LoadMap(mapPreview.FileName);
-        }
-
-        private void DeleteClick()
-        {
-            DeleteDialog.Open(mapPreview);
+            var fileName = Path.GetFileNameWithoutExtension(mapPreview.FileName);
+            SaverElement.SaveFileName = fileName;
         }
     }
 }
