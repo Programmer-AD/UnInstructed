@@ -36,6 +36,9 @@ namespace Uninstructed.UI.Components
         private GameDirector gameDirector;
         private float elapsedTime;
 
+        private bool started = false;
+        private List<SaveListElement> listElements;
+
         public string SaveFileName
         {
             get => nameInput.text;
@@ -56,12 +59,16 @@ namespace Uninstructed.UI.Components
 
         public void Start()
         {
+            if (started) return;
             gameDirector = FindObjectOfType<GameDirector>();
             scrollRect = GetComponent<ScrollRect>();
             elapsedTime = refreshTime;
             SaveFileName = "";
+            listElements = new();
 
             nameInput.onValueChanged.AddListener(OnInputValueChanged);
+
+            started = true;
         }
 
         public void Update()
@@ -76,27 +83,38 @@ namespace Uninstructed.UI.Components
 
         public void OnEnable()
         {
-            try
-            {
-                RefreshList();
-                SaveFileName = gameDirector.MapFileName;
-            }catch (Exception) { }
+            Start();
+            SaveFileName = Path.GetFileNameWithoutExtension(gameDirector.MapFilePath);
+            RefreshList();
         }
 
         private void RefreshList()
         {
             var listContent = scrollRect.content;
-            foreach (Transform item in listContent)
-            {
-                Destroy(item.gameObject);
-            }
 
             var previews = gameDirector.MapFileIO.GetPreviewList();
-            foreach (var preview in previews)
+
+            var toAdd = previews.Length - listElements.Count;
+            for (int i = 0; i < toAdd; i++)
             {
                 var element = Instantiate(elementPrefab, listContent);
-                element.MapPreview = preview;
                 element.SaverElement = this;
+                listElements.Add(element);
+            }
+
+            var elements = listElements.GetEnumerator();
+            foreach (var preview in previews)
+            {
+                elements.MoveNext();
+                var element = elements.Current;
+                element.MapPreview = preview;
+                element.gameObject.SetActive(true);
+            }
+
+            while (elements.MoveNext())
+            {
+                var element = elements.Current;
+                element.gameObject.SetActive(false);
             }
         }
 
@@ -127,7 +145,6 @@ namespace Uninstructed.UI.Components
                     {
                         errorBuilder.AppendLine("Не удалось считать данные из этого файла!");
                     }
-                    errorText.text = errorBuilder.ToString();
                 }
             }
 

@@ -10,5 +10,16 @@ namespace Uninstructed.Game.Saving.Models
 
         [NonSerialized]
         public string FileName;
+
+        public GameWorldPreviewData CopyPreview()
+        {
+            var preview = new GameWorldPreviewData
+            {
+                MapName = MapName,
+                SaveDate = SaveDate,
+                FileName = FileName
+            };
+            return preview;
+        }
     }
 }

@@ -25,10 +25,9 @@ namespace Uninstructed.UI.Components
 
         public void SetProgress(float progress)
         {
-            var escapedProgress = MathF.Round(progress * 100, 2);
-            var decimalProgress = decimal.Round((decimal)escapedProgress, 2);
+            var decimalProgress = decimal.Round((decimal)(progress * 100), 2);
             progressText.text = $"{decimalProgress}%";
-            progressBar.value = escapedProgress;
+            progressBar.value = progress;
         }
     }
 }

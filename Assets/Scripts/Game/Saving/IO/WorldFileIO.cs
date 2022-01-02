@@ -36,7 +36,7 @@ namespace Uninstructed.Game.Saving.IO
         public void Save(string filePath, GameWorldData instanceData)
         {
             using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            var previewData = (GameWorldPreviewData)instanceData;
+            var previewData = instanceData.CopyPreview();
             formatter.Serialize(stream, previewData);
             formatter.Serialize(stream, instanceData);
             stream.Close();
@@ -46,6 +46,7 @@ namespace Uninstructed.Game.Saving.IO
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             object result = formatter.Deserialize(stream);
+            stream.Close();
             return (GameWorldPreviewData)result;
         }
         public GameWorldData Load(string filePath)
@@ -53,27 +54,31 @@ namespace Uninstructed.Game.Saving.IO
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             object preview = formatter.Deserialize(stream);
             object result = formatter.Deserialize(stream);
+            stream.Close();
             return (GameWorldData)result;
         }
 
-        public IList<GameWorldPreviewData> GetPreviewList()
+        public GameWorldPreviewData[] GetPreviewList()
         {
             string[] files = Directory.GetFiles(SaveLocation);
-            var previewFiles = files.Where(x => x.EndsWith(FileFormat));
-            var previews = previewFiles.Select(file =>
+
+            var previews = new List<GameWorldPreviewData>();
+            foreach(var file in files)
             {
-                try
+                if (file.EndsWith(FileFormat))
                 {
-                    var preview = LoadPreview(file);
-                    preview.FileName = file;
-                    return preview;
+                    try
+                    {
+                        var preview = LoadPreview(file);
+                        preview.FileName = file;
+                        previews.Add(preview);
+                    }
+                    catch (Exception){ }
                 }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }).Where(x => x != null).OrderByDescending(x => x.SaveDate).ToList();
-            return previews;
+            }
+            var result = previews.OrderByDescending(x => x.SaveDate).ToArray();
+
+            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Uninstructed.Game;
 using Uninstructed.UI.Components.Dialogs;
 using UnityEngine;
@@ -19,6 +20,9 @@ namespace Uninstructed.UI.Components
         private ScrollRect scrollRect;
         private GameDirector gameDirector;
         private float elapsedTime;
+        private bool started = false;
+
+        private List<MapListElement> listElements;
 
         public void Reset()
         {
@@ -28,18 +32,18 @@ namespace Uninstructed.UI.Components
 
         public void Start()
         {
+            if (started) return;
             gameDirector = FindObjectOfType<GameDirector>();
             scrollRect = GetComponent<ScrollRect>();
             elapsedTime = refreshTime;
+            listElements = new();
+            started = true;
         }
 
         public void OnEnable()
         {
-            try
-            {
-                RefreshList();
-            }
-            catch (Exception) { }
+            Start();
+            RefreshList();
         }
 
         public void Update()
@@ -60,18 +64,31 @@ namespace Uninstructed.UI.Components
         private void RefreshList()
         {
             var listContent = scrollRect.content;
-            foreach (Transform item in listContent)
-            {
-                Destroy(item.gameObject);
-            }
 
             var previews = gameDirector.MapFileIO.GetPreviewList();
-            foreach (var preview in previews)
+
+            var toAdd = previews.Length - listElements.Count;
+            for (int i = 0; i < toAdd; i++)
             {
                 var element = Instantiate(elementPrefab, listContent);
-                element.MapPreview = preview;
                 element.DeleteDialog = DeleteDialog;
                 element.GameDirector = gameDirector;
+                listElements.Add(element);
+            }
+
+            var elements = listElements.GetEnumerator();
+            foreach (var preview in previews)
+            {
+                elements.MoveNext();
+                var element = elements.Current;
+                element.MapPreview = preview;
+                element.gameObject.SetActive(true);
+            }
+
+            while (elements.MoveNext())
+            {
+                var element = elements.Current;
+                element.gameObject.SetActive(false);
             }
         }
     }

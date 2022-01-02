@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace Uninstructed.UI.Components
 {
-    public class LoadingScreen:MonoBehaviour
+    public class LoadingScreen : MonoBehaviour
     {
         [SerializeField]
         private ProgressShower progressShower;
+
+        [SerializeField]
+        private GameObject menus;
 
         public bool Opened
         {
@@ -18,12 +22,17 @@ namespace Uninstructed.UI.Components
             private set
             {
                 gameObject.SetActive(value);
+                if (menus != null)
+                {
+                    menus.SetActive(!value);
+                }
             }
         }
 
         public void Reset()
         {
             progressShower = null;
+            menus = null;
         }
 
         public void SetProgress(float progress)
@@ -33,6 +42,7 @@ namespace Uninstructed.UI.Components
 
         public void Open()
         {
+            progressShower.SetProgress(0);
             Opened = true;
         }
 

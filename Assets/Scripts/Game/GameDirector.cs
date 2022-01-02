@@ -19,7 +19,7 @@ namespace Uninstructed.Game
         public WorldGenerator WorldGenerator { get; private set; }
         public GameWorld GameWorld { get; private set; }
 
-        public string MapFileName { get; set; }
+        public string MapFilePath { get; set; }
 
         public void Start()
         {
@@ -30,6 +30,7 @@ namespace Uninstructed.Game
                 return;
             }
             DontDestroyOnLoad(gameObject);
+
             MapFileIO = new WorldFileIO();
             GameObjectFactory = GetComponent<GameObjectFactory>();
             WorldGenerator = new WorldGenerator(GameObjectFactory);
@@ -49,12 +50,12 @@ namespace Uninstructed.Game
             });
         }
 
-        public void LoadMap(string mapFileName)
+        public void LoadMap(string filePath)
         {
             LoadGameSceneAsync(() =>
             {
-                MapFileName = mapFileName;
-                var instanceData = MapFileIO.Load(mapFileName);
+                MapFilePath = filePath;
+                var instanceData = MapFileIO.Load(filePath);
                 GameWorld.Load(instanceData, GameObjectFactory);
             });
         }
@@ -68,23 +69,32 @@ namespace Uninstructed.Game
 
         public void LoadMenus()
         {
-            Destroy(GameWorld);
-            SceneManager.LoadScene("MainMenu");
-            GC.Collect();
+
+            var loadAsync = SceneManager.LoadSceneAsync("MainMenu");
+            loadAsync.priority = int.MaxValue;
+            loadAsync.completed += _ =>
+            {
+                GC.Collect();
+            };
+            
         }
 
         private void LoadGameSceneAsync(Action onComplete)
         {
-            StartCoroutine(SceneLoading(onComplete));
+            StartCoroutine(GameSceneLoading(onComplete));
         }
 
-        private IEnumerator SceneLoading(Action onComplete)
+        private IEnumerator GameSceneLoading(Action onComplete)
         {
             var loadingScreen = FindObjectOfType<LoadingScreen>(true);
-
             loadingScreen.Open();
+            yield return null;
+
             var sceneLoading = SceneManager.LoadSceneAsync("GameScene");
-            sceneLoading.allowSceneActivation = false;
+            sceneLoading.allowSceneActivation = true;
+            sceneLoading.completed += _ => {
+                StartCoroutine(GameSceneBuilding(onComplete));
+            };
 
             var progress = sceneLoading.progress;
             while (!sceneLoading.isDone)
@@ -95,28 +105,28 @@ namespace Uninstructed.Game
                     progress = newProgress;
                     loadingScreen.SetProgress(progress);
                 }
-
-                if (progress >= 0.9f)
-                {
-                    loadingScreen.Close();
-                    sceneLoading.allowSceneActivation = true;
-                }
-
-                yield return new WaitForSeconds(.05f);
+                yield return null;
             }
+        }
 
+        private IEnumerator GameSceneBuilding(Action onComplete)
+        {
             var buildingScreen = FindObjectOfType<LoadingScreen>(true);
             buildingScreen.Open();
+            yield return null;
 
             GameWorld = Instantiate(worldPrefab);
             buildingScreen.SetProgress(0.1f);
+            yield return null;
 
             onComplete();
-            buildingScreen.SetProgress(0.85f);
+            buildingScreen.SetProgress(0.70f);
+            yield return null;
 
             GameWorld.Init();
             buildingScreen.SetProgress(1f);
             buildingScreen.Close();
+            yield return null;
         }
     }
 }

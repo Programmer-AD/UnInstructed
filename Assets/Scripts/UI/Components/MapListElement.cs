@@ -20,7 +20,7 @@ namespace Uninstructed.UI.Components
         private GameWorldPreviewData mapPreview;
         public GameWorldPreviewData MapPreview
         {
-            get => MapPreview;
+            get => mapPreview;
             set
             {
                 mapPreview = value;
