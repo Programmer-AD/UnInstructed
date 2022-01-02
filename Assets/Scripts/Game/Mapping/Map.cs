@@ -38,7 +38,7 @@ namespace Uninstructed.Game.Mapping
             Blocks = memento.Blocks.Select(x => x!=null?factory.Load(x):null).ToArray();
         }
 
-        public void InitPositions()
+        public void Init(GameWorld world)
         {
             for (int y = 0; y < Height; y++)
             {
@@ -48,6 +48,7 @@ namespace Uninstructed.Game.Mapping
                     if (block != null)
                     {
                         block.transform.localPosition = new Vector3(x, y);
+                        block.World = world;
                     }
                 }
             }
@@ -59,10 +60,22 @@ namespace Uninstructed.Game.Mapping
             {
                 Width = Width,
                 Height = Height,
-                Blocks = Blocks.Select(x => x != null ? x.Save() : null).ToArray(),
+                Blocks = Blocks.Select(x => x != null && !x.Broken ? x.Save() : null).ToArray(),
             };
 
             return memento;
+        }
+
+        public void Optimize()
+        {
+            for (int i = 0; i < Blocks.Length; i++)
+            {
+                var block = Blocks[i];
+                if (block != null && block.Broken)
+                {
+                    Blocks[i] = null;
+                }
+            }
         }
     }
 }

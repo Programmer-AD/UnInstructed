@@ -1,6 +1,6 @@
 ﻿namespace Uninstructed.Game.Player
 {
-    internal enum CommandType : byte
+    public enum CommandType : byte
     {
         Unknown, Start, Player, Get, Config
     }

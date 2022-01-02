@@ -6,8 +6,13 @@ using UnityEngine;
 
 namespace Uninstructed.Game.Main
 {
-    public class Entity : GameObjectBase<EntityType, EntityData>
+    public partial class Entity : GameObjectBase<EntityType, EntityData>
     {
+        [SerializeField, Min(1)]
+        private float moveSpeed, rotationSpeed;
+        public float MoveSpeed => moveSpeed;
+        public float RotationSpeed => rotationSpeed;
+
         [SerializeField, Min(1)]
         private float maxHealth;
         public float MaxHealth => maxHealth;
@@ -48,36 +53,19 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        public Inventory Inventory;
+        public Inventory Inventory { get; private set; }
         public Item HandItem => Inventory[selectedInventorySlot];
 
         public override void Reset()
         {
             base.Reset();
 
+            moveSpeed = 1;
+            rotationSpeed = 1;
             maxHealth = 100;
             inventorySize = 1;
             canDie = true;
             DeathParticles = null;
-        }
-
-        public void UseItem()
-        {
-            if (HandItem != null)
-            {
-                HandItem.Use(this);
-            }
-        }
-
-        public void UseOnBlock(Block block)
-        {
-            var positionDelta = block.transform.position - transform.position;
-            if (MathF.Abs(positionDelta.x) <= 1 && MathF.Abs(positionDelta.y) <= 1)
-            {
-                var item = HandItem;
-                item.UseOnBlock(this, block);
-
-            }
         }
 
         public event Action<Entity> Death;

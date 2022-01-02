@@ -22,7 +22,9 @@ namespace Uninstructed.Game
 
         public void Init()
         {
-            Map.InitPositions();
+            foreach (var entity in Entities) entity.World = this;
+            foreach (var item in DroppedItems) item.World = this;
+            Map.Init(this);
 #warning "Dont forget to uncomment this when player prefab ready"
             //Player = Entities.First(x => x.Type == EntityType.Player);
         }
@@ -38,6 +40,7 @@ namespace Uninstructed.Game
 
         public GameWorldData Save()
         {
+            Optimize();
             var memento = new GameWorldData
             {
                 MapName = MapName,
@@ -48,6 +51,13 @@ namespace Uninstructed.Game
             };
 
             return memento;
+        }
+
+        public void Optimize()
+        {
+            DroppedItems = DroppedItems.Where(x=>x!=null&&x.Count<=0).ToList();
+            Entities = Entities.Where(x => x != null && !x.Dead).ToList();
+            Map.Optimize();
         }
     }
 }

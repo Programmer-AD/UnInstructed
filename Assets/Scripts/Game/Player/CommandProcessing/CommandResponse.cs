@@ -1,6 +1,6 @@
 ﻿namespace Uninstructed.Game.Player
 {
-    internal enum CommandResponse : byte
+    public enum CommandResponse : byte
     {
         Ok, Error, Died
     }
