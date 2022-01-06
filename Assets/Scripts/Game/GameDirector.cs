@@ -11,9 +11,6 @@ namespace Uninstructed.Game
 {
     public class GameDirector : MonoBehaviour
     {
-        [SerializeField]
-        private GameWorld worldPrefab;
-
         public WorldFileIO MapFileIO { get; private set; }
         public GameObjectFactory GameObjectFactory { get; private set; }
         public WorldGenerator WorldGenerator { get; private set; }
@@ -35,11 +32,6 @@ namespace Uninstructed.Game
             GameObjectFactory = GetComponent<GameObjectFactory>();
             MapFileIO = new();
             WorldGenerator = new (GameObjectFactory);
-        }
-
-        public void Reset()
-        {
-            worldPrefab = null;
         }
 
         public void GenerateMap(GenerationSettings settings)
@@ -115,10 +107,9 @@ namespace Uninstructed.Game
         {
             var buildingScreen = FindObjectOfType<LoadingScreen>(true);
             buildingScreen.Open();
-            Time.timeScale = 0;
             yield return null;
 
-            GameWorld = Instantiate(worldPrefab);
+            GameWorld = new GameWorld() { Paused = true };
             buildingScreen.SetProgress(0.05f);
             yield return null;
 
@@ -128,9 +119,11 @@ namespace Uninstructed.Game
 
             GameWorld.Init();
             buildingScreen.SetProgress(0.99f);
+            yield return null;
 
             PlayerController = new(GameWorld.Player);
-            PlayerController.WorkStart += () => Time.timeScale = 1;
+            PlayerController.WorkStart += () => GameWorld.Paused = false;
+            PlayerController.ProgramStopped += () => GameWorld.Paused = true;
             buildingScreen.SetProgress(1f);
             buildingScreen.Close();
             yield return null;

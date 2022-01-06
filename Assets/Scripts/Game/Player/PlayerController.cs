@@ -20,6 +20,7 @@ namespace Uninstructed.Game.Player
         private CancellationTokenSource tokenSource;
         private Task prereadTask, executeTask;
         private volatile bool working;
+        public bool Working => working;
 
         public PlayerController(Entity player)
         {

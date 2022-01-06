@@ -10,12 +10,13 @@ using UnityEngine;
 
 namespace Uninstructed.Game
 {
-    public class GameWorld : MonoBehaviour, ISaveable<GameWorldData>
+    public class GameWorld : ISaveable<GameWorldData>
     {
         public IList<Entity> Entities { get; set; }
         public IList<Item> DroppedItems { get; set; }
         public Map Map { get; set; }
         public string MapName { get; set; }
+        public bool Paused { get; set; }
 
         public Entity Player { get; private set; }
 
