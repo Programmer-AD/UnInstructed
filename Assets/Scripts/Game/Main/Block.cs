@@ -26,10 +26,17 @@ namespace Uninstructed.Game.Main
             get => durability;
             set
             {
-                durability = Math.Clamp(value, 0, maxDurability);
-                if (durability == 0)
+                if (!CanBreak)
                 {
-                    OnBreak();
+                    durability = maxDurability;
+                }
+                else
+                {
+                    durability = Math.Clamp(value, 0, maxDurability);
+                    if (durability == 0)
+                    {
+                        OnBreak();
+                    }
                 }
             }
         }
@@ -50,10 +57,16 @@ namespace Uninstructed.Game.Main
             UsedItem?.Invoke(user, item, this);
         }
 
+        public event Action<Entity, Block, string[]> Interacted;
+        public void Interact(Entity entity, string[] command)
+        {
+            Interacted?.Invoke(entity, this, command);
+        }
+
         public event Action<Block> Break;
         private void OnBreak()
         {
-            if (canBreak && !Broken)
+            if (!Broken)
             {
                 if (BreakParticles != null)
                 {

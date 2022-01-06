@@ -1,11 +1,11 @@
 ﻿namespace Uninstructed.Game.Content.Enums
 {
-    public enum BlockType : uint
+    public enum BlockType : int
     {
         Empty = 0,
         
         BorderWall,
 
-        Unknown = uint.MaxValue,
+        Unknown = int.MaxValue,
     }
 }

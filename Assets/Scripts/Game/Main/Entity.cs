@@ -9,21 +9,14 @@ namespace Uninstructed.Game.Main
     public partial class Entity : GameObjectBase<EntityType, EntityData>
     {
         [SerializeField, Min(1)]
-        private float moveSpeed, rotationSpeed;
+        private float moveSpeed, rotationSpeed, maxHealth;
         public float MoveSpeed => moveSpeed;
         public float RotationSpeed => rotationSpeed;
-
-        [SerializeField, Min(1)]
-        private float maxHealth;
         public float MaxHealth => maxHealth;
 
         [SerializeField, Min(0)]
         private int inventorySize;
         public int InventorySize => inventorySize;
-
-        [SerializeField]
-        private bool canDie;
-        public bool CanDie => canDie;
 
         [SerializeField]
         private ParticleSystem DeathParticles;
@@ -64,14 +57,13 @@ namespace Uninstructed.Game.Main
             rotationSpeed = 1;
             maxHealth = 100;
             inventorySize = 1;
-            canDie = true;
             DeathParticles = null;
         }
 
         public event Action<Entity> Death;
         private void OnDeath()
         {
-            if (canDie && !Dead)
+            if (!Dead)
             {
                 if (DeathParticles != null)
                 {

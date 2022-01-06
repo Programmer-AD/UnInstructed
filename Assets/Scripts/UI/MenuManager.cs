@@ -6,7 +6,7 @@ namespace Uninstructed.UI
 {
     public class MenuManager : MonoBehaviour
     {
-        private readonly IDictionary<GameMenu, GameObject> menus;
+        private readonly Dictionary<GameMenu, GameObject> menus;
 
         public GameObject MenuContainer;
 

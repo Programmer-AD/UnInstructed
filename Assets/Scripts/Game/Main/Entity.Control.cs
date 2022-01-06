@@ -76,9 +76,14 @@ namespace Uninstructed.Game.Main
             rigidbody.rotation = EscapeAngle(rigidbody.rotation + rotate);
         }
 
-        public Vector2 LookAt => transform.up;
-        public Vector2Int LookAtBlock => new((int)MathF.Round(LookAt.x), (int)MathF.Round(LookAt.y));
-
+        public Vector2 LookDirection => transform.up;
+        public Vector2Int LookDirectionInt => new((int)MathF.Round(LookDirection.x), (int)MathF.Round(LookDirection.y));
+        public Block LookingAtBlock {
+            get {
+                var coord = LookDirectionInt;
+                return World.Map[coord.x, coord.y];
+            }
+        }
 
         public void SetMove(float distance)
         {
@@ -106,38 +111,53 @@ namespace Uninstructed.Game.Main
             return angle - rotations * 360;
         }
 
-        public void UseItem()
+        public bool UseItem()
         {
             if (HandItem != null)
             {
                 HandItem.Use(this);
+                return true;
             }
+            return false;
         }
 
-        public void UseOnBlock()
+        public bool UseOnBlock()
         {
-            var lookAtBlock = LookAtBlock;
-            var block = World.Map[lookAtBlock.x, lookAtBlock.y];
+            var block = LookingAtBlock;
+            if (block != null)
+            {
+                var item = HandItem;
+                if (item != null)
+                {
+                    item.UseOnBlock(this, block);
+                }
 
+                block.Use(this, item);
+                return true;
+            }
+            return false;
+        }
+
+        public bool Drop()
+        {
             var item = HandItem;
             if (item != null)
             {
-                item.UseOnBlock(this, block);
+                //TODO: Item drop
             }
-
-            block.Use(this, item);
+            return false;
         }
 
-        public void Drop()
+        public bool Interact(string[] command)
         {
-            //TODO: Item drop
+            var block = LookingAtBlock;
+            if (block != null)
+            {
+                block.Interact(this, command);
+                return true;
+            }
+            return false;
         }
-
-        public void Interact()
-        {
-            //TODO: entity-block interact mechanics
-        }
-
 
 
         struct Movement

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 
-namespace Uninstructed.Game.Player
+namespace Uninstructed.Game.Player.Commands.Models
 {
-    internal class Command
+    public class Command
     {
         public readonly CommandType Type;
         public readonly string[] Args;
 
         public Command(string command)
         {
-            string[] parts = command.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = command.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length > 0 && Enum.TryParse(parts[0], out Type))
             {
                 Args = parts.Skip(1).ToArray();

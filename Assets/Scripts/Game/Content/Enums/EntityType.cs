@@ -1,9 +1,11 @@
 ﻿namespace Uninstructed.Game.Content.Enums
 {
-    public enum EntityType : uint
+    public enum EntityType : int
     {
+        Null = 0,
+
         Player,
 
-        Unknown = uint.MaxValue,
+        Unknown = int.MaxValue,
     }
 }

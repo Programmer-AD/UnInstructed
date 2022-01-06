@@ -13,9 +13,9 @@ namespace Uninstructed.Game
         [SerializeField]
         private string blockPrefabsPath, entityPrefabsPath, itemPrefabsPath;
 
-        private IDictionary<ItemType, Item> items;
-        private IDictionary<EntityType, Entity> entities;
-        private IDictionary<BlockType, Block> blocks;
+        private Dictionary<ItemType, Item> items;
+        private Dictionary<EntityType, Entity> entities;
+        private Dictionary<BlockType, Block> blocks;
 
         private Item unknownItem;
         private Entity unknownEntity;
@@ -53,7 +53,7 @@ namespace Uninstructed.Game
         public Item Create(ItemType type)
             => Create<ItemType, ItemData, Item>(type, unknownItem, items);
 
-        private TObject Load<TEnum, TObject, TMemento>(TMemento memento, TObject unknown, IDictionary<TEnum, TObject> prefabs)
+        private TObject Load<TEnum, TObject, TMemento>(TMemento memento, TObject unknown, Dictionary<TEnum, TObject> prefabs)
             where TObject : GameObjectBase<TEnum, TMemento>
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
@@ -64,7 +64,7 @@ namespace Uninstructed.Game
             return result;
         }
 
-        private TObject Create<TEnum, TMemento, TObject>(TEnum type, TObject unknown, IDictionary<TEnum, TObject> prefabs)
+        private TObject Create<TEnum, TMemento, TObject>(TEnum type, TObject unknown, Dictionary<TEnum, TObject> prefabs)
             where TObject : GameObjectBase<TEnum, TMemento>
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
@@ -75,7 +75,7 @@ namespace Uninstructed.Game
             return result;
         }
 
-        private TObject GetPrefab<TEnum, TObject>(TEnum type, TObject unknown, IDictionary<TEnum, TObject> prefabs)
+        private TObject GetPrefab<TEnum, TObject>(TEnum type, TObject unknown, Dictionary<TEnum, TObject> prefabs)
             where TObject : class
             where TEnum : Enum
         {
@@ -87,7 +87,7 @@ namespace Uninstructed.Game
             return unknown;
         }
 
-        private IDictionary<TEnum, TObject> GetStructured<TEnum, TObject, TMemento>(string path)
+        private Dictionary<TEnum, TObject> GetStructured<TEnum, TObject, TMemento>(string path)
             where TObject : GameObjectBase<TEnum, TMemento>
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum

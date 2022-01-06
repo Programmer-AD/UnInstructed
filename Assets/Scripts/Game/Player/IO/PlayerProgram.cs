@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 
 namespace Uninstructed.Game.Player.IO
 {
-    public class PlayerProgram
+    internal class PlayerProgram
     {
         private readonly Process process;
 
         public bool Working { get; private set; }
 
-        public PlayerProgram()
+        public PlayerProgram(string fileName, string args)
         {
             Working = false;
 
@@ -24,31 +24,21 @@ namespace Uninstructed.Game.Player.IO
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     ErrorDialog = true,
+
+                    FileName = fileName,
+                    Arguments = args
                 }
             };
             process.StandardInput.AutoFlush = true;
-            process.Exited += Exited;
-        }
-
-        public void SetStartInfo(string fileName, string args)
-        {
-            if (!Working)
-            {
-                process.StartInfo.FileName = fileName;
-                process.StartInfo.Arguments = args;
-            }
+            process.Exited += ExitedHandler;
         }
 
         public void Start()
         {
             if (!Working)
             {
-                try
-                {
-                    process.Start();
-                    Working = true;
-                }
-                catch (Exception) { }
+                process.Start();
+                Working = true;
             }
         }
 
@@ -64,20 +54,15 @@ namespace Uninstructed.Game.Player.IO
         public async Task<string> ReadLineAsync()
         {
             string result = await process.StandardOutput.ReadLineAsync();
-            ReadInput?.Invoke(result);
             return result;
         }
 
         public async Task WriteLineAsync(string data)
         {
             await process.StandardInput.WriteLineAsync(data);
-            WriteOutput?.Invoke(data);
         }
 
-        public event Action<string> ReadInput;
-        public event Action<string> WriteOutput;
-
-        private void Exited(object sender, EventArgs e)
+        private void ExitedHandler(object sender, EventArgs e)
         {
             Working = false;
         }

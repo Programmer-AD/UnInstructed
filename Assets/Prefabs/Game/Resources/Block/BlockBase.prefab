@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f60445aa514ca864aac19df124c4049c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 4294967295
+  type: 2147483647
   defaultName: '!Unknown!'
   maxDurability: 1
   canBreak: 0
