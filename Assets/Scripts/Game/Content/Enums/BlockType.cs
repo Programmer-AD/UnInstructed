@@ -3,7 +3,7 @@
     public enum BlockType : int
     {
         Empty = 0,
-        
+
         BorderWall,
 
         Unknown = int.MaxValue,

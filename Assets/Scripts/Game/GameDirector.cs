@@ -4,7 +4,6 @@ using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Saving.IO;
 using Uninstructed.UI.Components;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace Uninstructed.Game
@@ -76,7 +75,7 @@ namespace Uninstructed.Game
             {
                 GC.Collect();
             };
-            
+
         }
 
         private void LoadGameSceneAsync(Action onComplete)
@@ -92,7 +91,8 @@ namespace Uninstructed.Game
 
             var sceneLoading = SceneManager.LoadSceneAsync("GameScene");
             sceneLoading.allowSceneActivation = true;
-            sceneLoading.completed += _ => {
+            sceneLoading.completed += _ =>
+            {
                 StartCoroutine(GameSceneBuilding(onComplete));
             };
 

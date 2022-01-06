@@ -36,7 +36,7 @@ namespace Uninstructed.UI
             foreach (Transform childTransform in MenuContainer.transform)
             {
                 var child = childTransform.gameObject;
-                string childName = child.name;
+                var childName = child.name;
                 if (Enum.TryParse(childName, out GameMenu menu))
                 {
                     menus.Add(menu, child);

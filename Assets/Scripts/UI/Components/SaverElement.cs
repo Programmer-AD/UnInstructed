@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Uninstructed.Game;
-using Uninstructed.UI.Components.Dialogs;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 using TMPro;
-using System.IO;
+using Uninstructed.Game;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Uninstructed.UI.Components
 {
@@ -42,10 +39,7 @@ namespace Uninstructed.UI.Components
         public string SaveFileName
         {
             get => nameInput.text;
-            set
-            {
-                nameInput.text = value;
-            }
+            set => nameInput.text = value;
         }
 
         public void Reset()
@@ -59,7 +53,11 @@ namespace Uninstructed.UI.Components
 
         public void Start()
         {
-            if (started) return;
+            if (started)
+            {
+                return;
+            }
+
             gameDirector = FindObjectOfType<GameDirector>();
             scrollRect = GetComponent<ScrollRect>();
             elapsedTime = refreshTime;
@@ -95,7 +93,7 @@ namespace Uninstructed.UI.Components
             var previews = gameDirector.MapFileIO.GetPreviewList();
 
             var toAdd = previews.Length - listElements.Count;
-            for (int i = 0; i < toAdd; i++)
+            for (var i = 0; i < toAdd; i++)
             {
                 var element = Instantiate(elementPrefab, listContent);
                 element.SaverElement = this;

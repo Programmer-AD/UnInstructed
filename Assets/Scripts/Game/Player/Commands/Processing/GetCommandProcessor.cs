@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Player.Commands.Models;
 
@@ -115,7 +114,7 @@ namespace Uninstructed.Game.Player.Commands.Processing
                     {
                         return ProcessingResult.Error("Start point coordinates must be less than end point coordinates at get map");
                     }
-                    if (sx < 0 || sy<0|| ex > world.Map.Width || ey > world.Map.Height)
+                    if (sx < 0 || sy < 0 || ex > world.Map.Width || ey > world.Map.Height)
                     {
                         return ProcessingResult.Error("Coordinates out of range at get map");
                     }
@@ -137,9 +136,9 @@ namespace Uninstructed.Game.Player.Commands.Processing
             }
 
             stringBuilder.AppendLine();
-            for (int y = sy; y < ey; y++)
+            for (var y = sy; y < ey; y++)
             {
-                for (int x = sx; x < ex; x++)
+                for (var x = sx; x < ex; x++)
                 {
                     stringBuilder.AppendShortInfo(world.Map[x, y]);
                 }
@@ -217,7 +216,7 @@ namespace Uninstructed.Game.Player.Commands.Processing
                         }
                         if (int.TryParse(args[1], out var index))
                         {
-                            if (index < 0 || index > world.Entities.Count )
+                            if (index < 0 || index > world.Entities.Count)
                             {
                                 return ProcessingResult.Error("Entity list index out of range at get info entity");
                             }

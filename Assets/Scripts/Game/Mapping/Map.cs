@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Saving.Interfaces;
 using Uninstructed.Game.Saving.Models;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Uninstructed.Game.Mapping
 {
@@ -35,14 +30,14 @@ namespace Uninstructed.Game.Mapping
         {
             Width = memento.Width;
             Height = memento.Height;
-            Blocks = memento.Blocks.Select(x => x!=null?factory.Load(x):null).ToArray();
+            Blocks = memento.Blocks.Select(x => x != null ? factory.Load(x) : null).ToArray();
         }
 
         public void Init(GameWorld world)
         {
-            for (int y = 0; y < Height; y++)
+            for (var y = 0; y < Height; y++)
             {
-                for (int x = 0; x < Width; x++)
+                for (var x = 0; x < Width; x++)
                 {
                     var block = this[x, y];
                     if (block != null)
@@ -68,7 +63,7 @@ namespace Uninstructed.Game.Mapping
 
         public void Optimize()
         {
-            for (int i = 0; i < Blocks.Length; i++)
+            for (var i = 0; i < Blocks.Length; i++)
             {
                 var block = Blocks[i];
                 if (block != null && block.Broken)

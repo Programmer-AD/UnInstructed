@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 
 namespace Uninstructed.UI.Components
 {
-    public class ProgressShower:MonoBehaviour
+    public class ProgressShower : MonoBehaviour
     {
         [SerializeField]
         private TMP_Text progressText;

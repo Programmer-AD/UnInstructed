@@ -29,7 +29,7 @@ namespace Uninstructed.Game.Saving.IO
             {
                 fileName += FileFormat;
             }
-            string path = Path.Combine(SaveLocation, fileName);
+            var path = Path.Combine(SaveLocation, fileName);
             return path;
         }
 
@@ -45,25 +45,25 @@ namespace Uninstructed.Game.Saving.IO
         public GameWorldPreviewData LoadPreview(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            object result = formatter.Deserialize(stream);
+            var result = formatter.Deserialize(stream);
             stream.Close();
             return (GameWorldPreviewData)result;
         }
         public GameWorldData Load(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            object preview = formatter.Deserialize(stream);
-            object result = formatter.Deserialize(stream);
+            var preview = formatter.Deserialize(stream);
+            var result = formatter.Deserialize(stream);
             stream.Close();
             return (GameWorldData)result;
         }
 
         public GameWorldPreviewData[] GetPreviewList()
         {
-            string[] files = Directory.GetFiles(SaveLocation);
+            var files = Directory.GetFiles(SaveLocation);
 
             var previews = new List<GameWorldPreviewData>();
-            foreach(var file in files)
+            foreach (var file in files)
             {
                 if (file.EndsWith(FileFormat))
                 {
@@ -73,7 +73,7 @@ namespace Uninstructed.Game.Saving.IO
                         preview.FileName = file;
                         previews.Add(preview);
                     }
-                    catch (Exception){ }
+                    catch (Exception) { }
                 }
             }
             var result = previews.OrderByDescending(x => x.SaveDate).ToArray();

@@ -13,7 +13,7 @@ namespace Uninstructed.Game.Main
         public Inventory(int maxSize)
         {
             slots = new Slot[maxSize];
-            for (int i = 0; i < slots.Length; i++)
+            for (var i = 0; i < slots.Length; i++)
             {
                 slots[i] = new Slot(i);
             }
@@ -35,7 +35,7 @@ namespace Uninstructed.Game.Main
                 while (item.Count > 0 && canAddTo.MoveNext())
                 {
                     var slot = canAddTo.Current;
-                    int addCount = Math.Min(slot.CanAdd, item.Count);
+                    var addCount = Math.Min(slot.CanAdd, item.Count);
 
                     slot.Item.Count += addCount;
                     item.Count -= addCount;
@@ -65,14 +65,14 @@ namespace Uninstructed.Game.Main
         {
             if (count > 0)
             {
-                int toRemove = count;
+                var toRemove = count;
                 var canRemoveFrom = slots.Where(x => !x.Empty && x.Item.Type == type)
                     .OrderByDescending(x => x.Number).GetEnumerator();
 
                 while (toRemove > 0 && canRemoveFrom.MoveNext())
                 {
                     var slot = canRemoveFrom.Current;
-                    int removeCount = Math.Min(toRemove, slot.Item.Count);
+                    var removeCount = Math.Min(toRemove, slot.Item.Count);
                     slot.Item.Count -= removeCount;
                     toRemove -= removeCount;
                 }
@@ -114,9 +114,9 @@ namespace Uninstructed.Game.Main
 
             public int Number { get; }
 
-            public bool Empty { get => Item == null; }
-            public bool Full { get => !Empty && Item.Count == Item.MaxCount; }
-            public int CanAdd { get => Empty ? 0 : Item.MaxCount - Item.Count; }
+            public bool Empty => Item == null;
+            public bool Full => !Empty && Item.Count == Item.MaxCount;
+            public int CanAdd => Empty ? 0 : Item.MaxCount - Item.Count;
 
             public void Normalize()
             {

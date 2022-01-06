@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Player.Commands.Models;
 
@@ -70,7 +68,7 @@ namespace Uninstructed.Game.Player.Commands.Processing
         private ProcessingResult ProcessRotate(string[] args)
         {
             var anglePos = 0;
-            bool to = false;
+            var to = false;
             if (args.Length == 2)
             {
                 if (args[0] == "to")

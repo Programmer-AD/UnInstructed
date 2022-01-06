@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Uninstructed.Game.Player.Commands.Models
+﻿namespace Uninstructed.Game.Player.Commands.Models
 {
     public class ProcessingResult
     {
-        
+
 
         public readonly ProcessingStatus Status;
         public readonly string Output;
@@ -21,10 +15,18 @@ namespace Uninstructed.Game.Player.Commands.Models
 
 
         public static ProcessingResult Error(string description)
-            => new(ProcessingStatus.Error, description);
+        {
+            return new(ProcessingStatus.Error, description);
+        }
+
         public static ProcessingResult Ok(string output = null)
-            => new(ProcessingStatus.Ok, output);
+        {
+            return new(ProcessingStatus.Ok, output);
+        }
+
         public static ProcessingResult Dead()
-            => new(ProcessingStatus.Dead);
+        {
+            return new(ProcessingStatus.Dead);
+        }
     }
 }

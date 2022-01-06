@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using Uninstructed.Game.Mapping;
+using UnityEngine;
 
 namespace Uninstructed.UI.Components
 {

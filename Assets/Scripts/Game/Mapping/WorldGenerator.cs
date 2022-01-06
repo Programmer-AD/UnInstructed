@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 
@@ -60,9 +56,9 @@ namespace Uninstructed.Game.Mapping
             var middleX = settings.Width / 2;
             var middleY = settings.Height / 2;
 
-            for (int by = 0; by < spawnSize; by++)
+            for (var by = 0; by < spawnSize; by++)
             {
-                for (int bx = 0; bx < spawnSize; bx++)
+                for (var bx = 0; bx < spawnSize; bx++)
                 {
                     var x = middleX + bx - spawnSize / 2;
                     var y = middleY + by - spawnSize / 2;
@@ -83,11 +79,11 @@ namespace Uninstructed.Game.Mapping
         {
             var width = simpleMap.GetLength(0);
             var height = simpleMap.GetLength(1);
-            for (int i = 0; i < width; i++)
+            for (var i = 0; i < width; i++)
             {
                 simpleMap[i, 0] = simpleMap[i, height - 1] = BlockType.BorderWall;
             }
-            for (int i = 0; i < height; i++)
+            for (var i = 0; i < height; i++)
             {
                 simpleMap[0, i] = simpleMap[width - 1, i] = BlockType.BorderWall;
             }
@@ -95,9 +91,9 @@ namespace Uninstructed.Game.Mapping
 
         private void InstantinateSimpleMap(BlockType[,] simpleMap)
         {
-            for (int y = 0; y < world.Map.Height; y++)
+            for (var y = 0; y < world.Map.Height; y++)
             {
-                for (int x = 0; x < world.Map.Width; x++)
+                for (var x = 0; x < world.Map.Width; x++)
                 {
                     var blockType = simpleMap[x, y];
                     if (blockType != BlockType.Empty)

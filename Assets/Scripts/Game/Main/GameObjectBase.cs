@@ -10,7 +10,7 @@ namespace Uninstructed.Game.Main
     {
         [SerializeField]
         private TEnum type;
-        public TEnum Type { get => type; }
+        public TEnum Type => type;
 
         [SerializeField]
         private string defaultName;

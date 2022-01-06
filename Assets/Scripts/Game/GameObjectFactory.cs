@@ -40,18 +40,34 @@ namespace Uninstructed.Game
         }
 
         public Entity Load(EntityData data)
-            => Load(data, unknownEntity, entities);
+        {
+            return Load(data, unknownEntity, entities);
+        }
+
         public Block Load(BlockData data)
-            => Load(data, unknownBlock, blocks);
+        {
+            return Load(data, unknownBlock, blocks);
+        }
+
         public Item Load(ItemData data)
-            => Load(data, unknownItem, items);
+        {
+            return Load(data, unknownItem, items);
+        }
 
         public Entity Create(EntityType type)
-            => Create<EntityType, EntityData, Entity>(type, unknownEntity, entities);
+        {
+            return Create<EntityType, EntityData, Entity>(type, unknownEntity, entities);
+        }
+
         public Block Create(BlockType type)
-            => Create<BlockType, BlockData, Block>(type, unknownBlock, blocks);
+        {
+            return Create<BlockType, BlockData, Block>(type, unknownBlock, blocks);
+        }
+
         public Item Create(ItemType type)
-            => Create<ItemType, ItemData, Item>(type, unknownItem, items);
+        {
+            return Create<ItemType, ItemData, Item>(type, unknownItem, items);
+        }
 
         private TObject Load<TEnum, TObject, TMemento>(TMemento memento, TObject unknown, Dictionary<TEnum, TObject> prefabs)
             where TObject : GameObjectBase<TEnum, TMemento>

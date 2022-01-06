@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using Uninstructed.Game.Saving.Models;
 using UnityEngine;
@@ -48,7 +47,7 @@ namespace Uninstructed.UI.Components.Dialogs
                 File.Delete(mapPreview.FileName);
                 Deleted.Invoke();
             }
-            
+
             Opened = false;
         }
 

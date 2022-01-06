@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Uninstructed.Game.Saving.Models;
-using Uninstructed.Game;
-using Uninstructed.UI.Components.Dialogs;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
 
 namespace Uninstructed.UI.Components
 {
-    public class SaveListElement:MonoBehaviour
+    public class SaveListElement : MonoBehaviour
     {
         [SerializeField]
         private Button clickableBackground;

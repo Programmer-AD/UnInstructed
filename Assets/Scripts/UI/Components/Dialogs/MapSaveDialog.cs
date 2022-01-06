@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Uninstructed.UI.Components.Dialogs
 {
-    public class MapSaveDialog:DialogBase
+    public class MapSaveDialog : DialogBase
     {
         [SerializeField]
         private Button cancelButton, saveButton;

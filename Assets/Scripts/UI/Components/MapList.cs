@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Uninstructed.Game;
 using Uninstructed.UI.Components.Dialogs;
@@ -32,7 +31,11 @@ namespace Uninstructed.UI.Components
 
         public void Start()
         {
-            if (started) return;
+            if (started)
+            {
+                return;
+            }
+
             gameDirector = FindObjectOfType<GameDirector>();
             scrollRect = GetComponent<ScrollRect>();
             elapsedTime = refreshTime;
@@ -68,7 +71,7 @@ namespace Uninstructed.UI.Components
             var previews = gameDirector.MapFileIO.GetPreviewList();
 
             var toAdd = previews.Length - listElements.Count;
-            for (int i = 0; i < toAdd; i++)
+            for (var i = 0; i < toAdd; i++)
             {
                 var element = Instantiate(elementPrefab, listContent);
                 element.DeleteDialog = DeleteDialog;

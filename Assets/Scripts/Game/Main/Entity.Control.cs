@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Uninstructed.Game.Content.Enums;
-using Uninstructed.Game.Main;
-using Uninstructed.Game.Saving.Models;
 
 using UnityEngine;
 
@@ -78,8 +71,10 @@ namespace Uninstructed.Game.Main
 
         public Vector2 LookDirection => transform.up;
         public Vector2Int LookDirectionInt => new((int)MathF.Round(LookDirection.x), (int)MathF.Round(LookDirection.y));
-        public Block LookingAtBlock {
-            get {
+        public Block LookingAtBlock
+        {
+            get
+            {
                 var coord = LookDirectionInt;
                 return World.Map[coord.x, coord.y];
             }
@@ -159,14 +154,13 @@ namespace Uninstructed.Game.Main
             return false;
         }
 
-
-        struct Movement
+        private struct Movement
         {
             public MovementType Type;
             public float Value;
         }
 
-        enum MovementType
+        private enum MovementType
         {
             None, Move, Rotate
         }

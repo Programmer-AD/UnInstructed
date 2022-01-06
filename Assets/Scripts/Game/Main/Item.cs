@@ -9,7 +9,7 @@ namespace Uninstructed.Game.Main
     {
         [SerializeField, Min(1)]
         private int maxCount;
-        public int MaxCount { get => maxCount; }
+        public int MaxCount => maxCount;
 
 
         private int count;
@@ -88,6 +88,6 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        protected override void InitDefaultSub(GameObjectFactory factory){}
+        protected override void InitDefaultSub(GameObjectFactory factory) { }
     }
 }

@@ -11,7 +11,7 @@ namespace Uninstructed.Game.Player.Commands
             return builder.Append(position.x).Append(' ').Append(position.y);
         }
         public static StringBuilder AppendShortInfo(this StringBuilder builder, Block block)
-{
+        {
             if (builder.AppendOnNull(block))
             {
                 return builder;

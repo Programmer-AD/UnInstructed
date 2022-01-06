@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Uninstructed.Game;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Uninstructed.UI.Components
@@ -42,8 +36,15 @@ namespace Uninstructed.UI.Components
             }
         }
 
-        public void HandleOpen() => SetOpen(true);
-        public void HandleClose() => SetOpen(false);
+        public void HandleOpen()
+        {
+            SetOpen(true);
+        }
+
+        public void HandleClose()
+        {
+            SetOpen(false);
+        }
 
         private void SetOpen(bool opened)
         {

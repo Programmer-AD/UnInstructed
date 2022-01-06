@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Saving.Interfaces;
 using Uninstructed.Game.Saving.Models;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Uninstructed.Game
 {
@@ -22,8 +20,16 @@ namespace Uninstructed.Game
 
         public void Init()
         {
-            foreach (var entity in Entities) entity.World = this;
-            foreach (var item in DroppedItems) item.World = this;
+            foreach (var entity in Entities)
+            {
+                entity.World = this;
+            }
+
+            foreach (var item in DroppedItems)
+            {
+                item.World = this;
+            }
+
             Map.Init(this);
 #warning "Dont forget to uncomment this when player prefab ready"
             //Player = Entities.First(x => x.Type == EntityType.Player);
@@ -55,7 +61,7 @@ namespace Uninstructed.Game
 
         public void Optimize()
         {
-            DroppedItems = DroppedItems.Where(x=>x!=null&&x.Count<=0).ToList();
+            DroppedItems = DroppedItems.Where(x => x != null && x.Count <= 0).ToList();
             Entities = Entities.Where(x => x != null && !x.Dead).ToList();
             Map.Optimize();
         }

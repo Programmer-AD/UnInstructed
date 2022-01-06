@@ -40,10 +40,7 @@ namespace Uninstructed.Game.Main
         public int SelectedInventorySlot
         {
             get => selectedInventorySlot;
-            set
-            {
-                selectedInventorySlot = Math.Clamp(value, 0, inventorySize);
-            }
+            set => selectedInventorySlot = Math.Clamp(value, 0, inventorySize);
         }
 
         public Inventory Inventory { get; private set; }
@@ -98,7 +95,7 @@ namespace Uninstructed.Game.Main
             SelectedInventorySlot = memento.SelectedInventorySlot;
             Inventory = new Inventory(inventorySize);
 
-            int position = 0;
+            var position = 0;
             foreach (var itemData in memento.Inventory)
             {
                 if (itemData != null)
