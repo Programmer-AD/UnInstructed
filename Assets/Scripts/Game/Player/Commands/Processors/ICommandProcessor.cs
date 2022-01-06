@@ -1,6 +1,6 @@
 ﻿using Uninstructed.Game.Player.Commands.Models;
 
-namespace Uninstructed.Game.Player.Commands.Processing
+namespace Uninstructed.Game.Player.Commands.Processors
 {
     internal interface ICommandProcessor
     {

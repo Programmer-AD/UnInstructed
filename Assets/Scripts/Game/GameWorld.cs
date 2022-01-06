@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Saving.Interfaces;
@@ -31,8 +32,7 @@ namespace Uninstructed.Game
             }
 
             Map.Init(this);
-#warning "Dont forget to uncomment this when player prefab ready"
-            //Player = Entities.First(x => x.Type == EntityType.Player);
+            Player = Entities.First(x => x.Type == EntityType.Player);
         }
 
         public void Load(GameWorldData memento, GameObjectFactory factory)

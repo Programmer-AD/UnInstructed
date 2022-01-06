@@ -4,7 +4,7 @@ using System.Linq;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Player.Commands.Models;
 
-namespace Uninstructed.Game.Player.Commands.Processing
+namespace Uninstructed.Game.Player.Commands.Processors
 {
     internal class PlayerCommandProcessor : ICommandProcessor
     {

@@ -1,9 +1,11 @@
-﻿namespace Uninstructed.Game.Player.Commands.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Uninstructed.Game.Player.Commands.Models
 {
     public class ProcessingResult
     {
-
-
         public readonly ProcessingStatus Status;
         public readonly string Output;
 

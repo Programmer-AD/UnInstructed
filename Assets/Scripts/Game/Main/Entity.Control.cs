@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections;
 using UnityEngine;
 
 namespace Uninstructed.Game.Main
@@ -8,8 +8,8 @@ namespace Uninstructed.Game.Main
     {
         private new Rigidbody2D rigidbody;
 
-        private Movement action = new();
-        public bool Busy => action.Type != MovementType.None;
+        private IEnumerator action;
+        public bool Busy => action != null;
 
         public void Start()
         {
@@ -18,55 +18,13 @@ namespace Uninstructed.Game.Main
 
         public void Update()
         {
-            switch (action.Type)
+            if (action != null)
             {
-                case MovementType.None:
-                    return;
-                case MovementType.Move:
-                    TickMove();
-                    break;
-                case MovementType.Rotate:
-                    TickRotate();
-                    break;
+                if (!action.MoveNext())
+                {
+                    action = null;
+                }
             }
-        }
-
-        private void TickMove()
-        {
-            var maxFrameMove = Time.deltaTime * moveSpeed;
-            var directed = MathF.Sign(action.Value) * maxFrameMove;
-            float move;
-            if (action.Value / directed <= 1)
-            {
-                move = action.Value;
-                action.Value = 0;
-                action.Type = MovementType.None;
-            }
-            else
-            {
-                action.Value -= directed;
-                move = directed;
-            }
-            rigidbody.position += move * (Vector2)transform.up;
-        }
-
-        private void TickRotate()
-        {
-            var maxFrameRotate = Time.deltaTime * rotationSpeed;
-            var directed = MathF.Sign(action.Value) * maxFrameRotate;
-            float rotate;
-            if (action.Value / directed <= 1)
-            {
-                rotate = action.Value;
-                action.Value = 0;
-                action.Type = MovementType.None;
-            }
-            else
-            {
-                action.Value -= directed;
-                rotate = directed;
-            }
-            rigidbody.rotation = EscapeAngle(rigidbody.rotation + rotate);
         }
 
         public Vector2 LookDirection => transform.up;
@@ -82,14 +40,12 @@ namespace Uninstructed.Game.Main
 
         public void SetMove(float distance)
         {
-            action.Type = MovementType.Move;
-            action.Value = distance;
+            action = Movement(distance);
         }
 
         public void SetRotate(float angle, bool to = false)
         {
             angle = EscapeAngle(angle);
-            action.Type = MovementType.Rotate;
             if (to)
             {
                 var current = rigidbody.rotation;
@@ -97,7 +53,7 @@ namespace Uninstructed.Game.Main
                 var sideChange = delta - Math.Sign(delta) * 360;
                 angle = Math.Min(Math.Abs(delta), Math.Abs(sideChange));
             }
-            action.Value = angle;
+            action = Rotation(angle);
         }
 
         private float EscapeAngle(float angle)
@@ -110,6 +66,7 @@ namespace Uninstructed.Game.Main
         {
             if (HandItem != null)
             {
+                action = Other();
                 HandItem.Use(this);
                 return true;
             }
@@ -121,6 +78,8 @@ namespace Uninstructed.Game.Main
             var block = LookingAtBlock;
             if (block != null)
             {
+                action = Other();
+
                 var item = HandItem;
                 if (item != null)
                 {
@@ -138,7 +97,9 @@ namespace Uninstructed.Game.Main
             var item = HandItem;
             if (item != null)
             {
+                action = Other();
                 //TODO: Item drop
+                return true;
             }
             return false;
         }
@@ -148,21 +109,62 @@ namespace Uninstructed.Game.Main
             var block = LookingAtBlock;
             if (block != null)
             {
+                action = Other();
                 block.Interact(this, command);
                 return true;
             }
             return false;
         }
 
-        private struct Movement
+        private IEnumerator Movement(float distance)
         {
-            public MovementType Type;
-            public float Value;
+            bool ended = false;
+            var directedSpeed = MathF.Sign(distance) * moveSpeed;
+            while (!ended)
+            {
+                var directed = Time.deltaTime * directedSpeed;
+                float move;
+                if (distance / directed <= 1)
+                {
+                    move = distance;
+                    ended = true;
+                }
+                else
+                {
+                    distance -= directed;
+                    move = directed;
+                }
+                rigidbody.position += move * (Vector2)transform.up;
+                yield return null;
+            }
         }
 
-        private enum MovementType
+        private IEnumerator Rotation(float angle)
         {
-            None, Move, Rotate
+            bool ended = false;
+            var directedRotate = MathF.Sign(angle) * rotationSpeed;
+            while (!ended)
+            {
+                var directed = Time.deltaTime * directedRotate;
+                float rotate;
+                if (angle / directed <= 1)
+                {
+                    rotate = angle;
+                    ended = true;
+                }
+                else
+                {
+                    angle -= directed;
+                    rotate = directed;
+                }
+                rigidbody.rotation = EscapeAngle(rigidbody.rotation + rotate);
+                yield return null;
+            }
+        }
+
+        private IEnumerator Other()
+        {
+            yield return null;
         }
     }
 }

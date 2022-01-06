@@ -46,7 +46,7 @@ namespace Uninstructed.Game.Player.IO
         {
             if (Working)
             {
-                process.Close();
+                process.Dispose();
                 Working = false;
             }
         }

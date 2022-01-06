@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Uninstructed.Game.Mapping;
+using Uninstructed.Game.Player;
 using Uninstructed.Game.Saving.IO;
 using Uninstructed.UI.Components;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace Uninstructed.Game
         public GameObjectFactory GameObjectFactory { get; private set; }
         public WorldGenerator WorldGenerator { get; private set; }
         public GameWorld GameWorld { get; private set; }
+        public PlayerController PlayerController { get; private set; }
 
         public string MapFilePath { get; set; }
 
@@ -30,9 +32,9 @@ namespace Uninstructed.Game
             }
             DontDestroyOnLoad(gameObject);
 
-            MapFileIO = new WorldFileIO();
             GameObjectFactory = GetComponent<GameObjectFactory>();
-            WorldGenerator = new WorldGenerator(GameObjectFactory);
+            MapFileIO = new();
+            WorldGenerator = new (GameObjectFactory);
         }
 
         public void Reset()
@@ -113,17 +115,22 @@ namespace Uninstructed.Game
         {
             var buildingScreen = FindObjectOfType<LoadingScreen>(true);
             buildingScreen.Open();
+            Time.timeScale = 0;
             yield return null;
 
             GameWorld = Instantiate(worldPrefab);
-            buildingScreen.SetProgress(0.1f);
+            buildingScreen.SetProgress(0.05f);
             yield return null;
 
             onComplete();
-            buildingScreen.SetProgress(0.5f);
+            buildingScreen.SetProgress(0.4f);
             yield return null;
 
             GameWorld.Init();
+            buildingScreen.SetProgress(0.99f);
+
+            PlayerController = new(GameWorld.Player);
+            PlayerController.WorkStart += () => Time.timeScale = 1;
             buildingScreen.SetProgress(1f);
             buildingScreen.Close();
             yield return null;

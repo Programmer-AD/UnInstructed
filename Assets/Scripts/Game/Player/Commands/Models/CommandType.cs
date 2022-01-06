@@ -2,6 +2,6 @@
 {
     public enum CommandType : byte
     {
-        Unknown, Work, Player, Get, Config
+        Unknown, Work, Player, Get
     }
 }
