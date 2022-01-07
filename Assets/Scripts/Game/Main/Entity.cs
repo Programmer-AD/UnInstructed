@@ -82,7 +82,7 @@ namespace Uninstructed.Game.Main
 
             memento.Health = Health;
             memento.SelectedInventorySlot = SelectedInventorySlot;
-            memento.Inventory = Inventory.Select(x => x == null ? x.Save() : null).ToArray();
+            memento.Inventory = Inventory.Select(x => x != null ? x.Save() : null).ToArray();
         }
 
         protected override void LoadSub(EntityData memento, GameObjectFactory factory)

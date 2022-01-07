@@ -61,7 +61,7 @@ namespace Uninstructed.Game
 
         public void Optimize()
         {
-            DroppedItems = DroppedItems.Where(x => x != null && x.Count <= 0).ToList();
+            DroppedItems = DroppedItems.Where(x => x != null).ToList();
             Entities = Entities.Where(x => x != null && !x.Dead).ToList();
             Map.Optimize();
         }
