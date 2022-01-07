@@ -263,6 +263,7 @@ MonoBehaviour:
   scaleSpeed: 1
   minScale: 1
   maxScale: 12
+  sceneManager: {fileID: 910881189}
 --- !u!1001 &242325040
 PrefabInstance:
   m_ObjectHideFlags: 0
