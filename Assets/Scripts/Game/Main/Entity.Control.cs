@@ -50,22 +50,10 @@ namespace Uninstructed.Game.Main
 
         public void SetRotate(float angle, bool to = false)
         {
-            angle = EscapeAngle(angle);
-            if (to)
-            {
-                var current = rigidbody.rotation;
-                var delta = EscapeAngle(current - angle);
-                var sideChange = delta - Math.Sign(delta) * 360;
-                angle = Math.Min(Math.Abs(delta), Math.Abs(sideChange));
-            }
-            action = Rotation(angle);
+            action = Rotation(angle, to);
         }
 
-        private float EscapeAngle(float angle)
-        {
-            var rotations = (int)angle / 360;
-            return angle - rotations * 360;
-        }
+        
 
         public bool UseItem()
         {
@@ -144,8 +132,24 @@ namespace Uninstructed.Game.Main
             }
         }
 
-        private IEnumerator Rotation(float angle)
+        private IEnumerator Rotation(float angle, bool to)
         {
+            angle = EscapeAngle(angle);
+            if (to)
+            {
+                var current = rigidbody.rotation;
+                var delta = EscapeAngle(angle - current);
+                var sideChange = delta - Math.Sign(delta) * 360;
+                if (Math.Abs(delta) < Math.Abs(sideChange))
+                {
+                    angle = delta;
+                }
+                else
+                {
+                    angle = sideChange;
+                }
+            }
+
             var ended = false;
             var directedRotate = MathF.Sign(angle) * rotationSpeed;
             while (!ended)
@@ -170,6 +174,12 @@ namespace Uninstructed.Game.Main
         private IEnumerator Other()
         {
             yield return null;
+        }
+
+        private float EscapeAngle(float angle)
+        {
+            var rotations = (int)angle / 360;
+            return angle - rotations * 360;
         }
     }
 }

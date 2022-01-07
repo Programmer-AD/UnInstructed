@@ -117,9 +117,12 @@ namespace Uninstructed.Game.Player
             {
                 if (!Player.Busy && commandQueue.TryDequeue(out var command))
                 {
-                    var result = commandProcessor.Process(command);
-                    await WaitUntilPlayerBusy();
-                    await PrintResult(result);
+                    if (started || command.Type != CommandType.Player)
+                    {
+                        var result = commandProcessor.Process(command);
+                        await WaitUntilPlayerBusy();
+                        await PrintResult(result);
+                    }
                 }
             }
             Stop();
