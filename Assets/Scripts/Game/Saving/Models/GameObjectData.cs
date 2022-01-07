@@ -10,6 +10,6 @@ namespace Uninstructed.Game.Saving.Models
         public TEnum Type;
         public string ShowName;
 
-        public Dictionary<string, object> Additionals = new Dictionary<string, object>();
+        public Dictionary<string, object> Additionals = new();
     }
 }

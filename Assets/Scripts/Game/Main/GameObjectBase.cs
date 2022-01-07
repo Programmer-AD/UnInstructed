@@ -50,7 +50,10 @@ namespace Uninstructed.Game.Main
 
         public TMemento Save()
         {
-            var memento = new TMemento();
+            var memento = new TMemento()
+            {
+                Type = type,
+            };
             if (ShowName != defaultName)
             {
                 memento.ShowName = ShowName;
