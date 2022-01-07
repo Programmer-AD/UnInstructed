@@ -10,7 +10,7 @@ namespace Uninstructed.Game.Player.IO
 
         public bool Working { get; private set; }
 
-        public PlayerProgram(string fileName, string args)
+        public PlayerProgram(string command, string args)
         {
             Working = false;
 
@@ -25,11 +25,12 @@ namespace Uninstructed.Game.Player.IO
                     UseShellExecute = false,
                     ErrorDialog = true,
 
-                    FileName = fileName,
+                    FileName = command,
                     Arguments = args
-                }
+                },
+                EnableRaisingEvents = true
             };
-            process.StandardInput.AutoFlush = true;
+
             process.Exited += ExitedHandler;
         }
 
@@ -59,7 +60,11 @@ namespace Uninstructed.Game.Player.IO
 
         public async Task WriteLineAsync(string data)
         {
-            await process.StandardInput.WriteLineAsync(data);
+            if (Working)
+            {
+                await process.StandardInput.WriteLineAsync(data);
+                await process.StandardInput.FlushAsync();
+            }
         }
 
         private void ExitedHandler(object sender, EventArgs e)

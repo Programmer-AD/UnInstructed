@@ -18,7 +18,7 @@ namespace Uninstructed.Game.Main
 
         public void Update()
         {
-            if (World.Paused) return;
+            if (World == null || World.Paused) return;
             if (action != null)
             {
                 if (!action.MoveNext())

@@ -11,7 +11,7 @@ namespace Uninstructed.Game.Player.Commands.Models
         public Command(string command)
         {
             var parts = command.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length > 0 && Enum.TryParse(parts[0], out Type))
+            if (parts.Length > 0 && Enum.TryParse(parts[0], true, out Type))
             {
                 Args = parts.Skip(1).ToArray();
             }

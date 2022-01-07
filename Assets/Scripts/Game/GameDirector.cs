@@ -19,6 +19,8 @@ namespace Uninstructed.Game
 
         public string MapFilePath { get; set; }
 
+        public bool LoadFinished { get; private set; }
+
         public void Start()
         {
             var existingDirector = FindObjectOfType<GameDirector>();
@@ -69,7 +71,6 @@ namespace Uninstructed.Game
             {
                 GC.Collect();
             };
-
         }
 
         private void LoadGameSceneAsync(Action onComplete)
@@ -79,6 +80,8 @@ namespace Uninstructed.Game
 
         private IEnumerator GameSceneLoading(Action onComplete)
         {
+            LoadFinished = false;
+
             var loadingScreen = FindObjectOfType<LoadingScreen>(true);
             loadingScreen.Open();
             yield return null;
@@ -125,6 +128,10 @@ namespace Uninstructed.Game
             PlayerController.WorkStart += () => GameWorld.Paused = false;
             PlayerController.ProgramStopped += () => GameWorld.Paused = true;
             buildingScreen.SetProgress(1f);
+            yield return null;
+
+
+            LoadFinished = true;
             buildingScreen.Close();
             yield return null;
         }

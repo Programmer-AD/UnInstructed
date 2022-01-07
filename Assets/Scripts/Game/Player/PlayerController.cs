@@ -19,25 +19,30 @@ namespace Uninstructed.Game.Player
 
         private CancellationTokenSource tokenSource;
         private Task prereadTask, executeTask;
+
         private volatile bool working;
         public bool Working => working;
+
+        private volatile bool started;
+        public bool Started => started;
 
         public PlayerController(Entity player)
         {
             Player = player;
 
-            commandProcessor = new (player, OnWorkStart, OnWorkEnd);
-            commandQueue = new ();
+            commandProcessor = new(player, OnWorkStart, OnWorkEnd);
+            commandQueue = new();
 
             working = false;
+            started = false;
         }
 
-        public bool TryStart(string fileName, string arguments)
+        public bool TryStart(string command, string arguments)
         {
             if (working) return false;
             try
             {
-                program = new(fileName, arguments);
+                program = new(command, arguments);
                 program.Start();
 
                 commandQueue.Clear();
@@ -61,19 +66,17 @@ namespace Uninstructed.Game.Player
             if (working)
             {
                 working = false;
+                started = false;
 
                 tokenSource.Cancel();
                 tokenSource.Dispose();
-                tokenSource = null;
-
-                prereadTask.Dispose();
-                prereadTask = null;
-
-                executeTask.Dispose();
-                executeTask = null;
 
                 program.Stop();
                 program = null;
+
+                tokenSource = null;
+                prereadTask = null;
+                executeTask = null;
 
                 ProgramStopped?.Invoke();
             }
@@ -82,6 +85,7 @@ namespace Uninstructed.Game.Player
         public event Action WorkStart;
         private void OnWorkStart()
         {
+            started = true;
             WorkStart?.Invoke();
         }
 
@@ -99,23 +103,22 @@ namespace Uninstructed.Game.Player
                 {
                     var command = new Command(input);
                     commandQueue.Enqueue(command);
+                    UnityEngine.Debug.Log($"Readed: {input}");
                 }
             }
-            Stop();
         }
 
         private async Task ExecuteTaskMain()
         {
-            while (working && program.Working)
+            while (working && (program.Working || commandQueue.Count > 0))
             {
-                if (!Player.Busy)
+                if (!Player.Busy && commandQueue.TryDequeue(out var command))
                 {
-                    if (commandQueue.TryDequeue(out var command))
-                    {
-                        var result = commandProcessor.Process(command);
-                        await WaitUntilPlayerBusy();
-                        await PrintResult(result);
-                    }
+                    var result = commandProcessor.Process(command);
+                    await WaitUntilPlayerBusy();
+                    await PrintResult(result);
+                    UnityEngine.Debug.Log($"Processed: {command.Type} {command.Args} => {result.Status}; Output: {result.Output}");
+
                 }
             }
             Stop();

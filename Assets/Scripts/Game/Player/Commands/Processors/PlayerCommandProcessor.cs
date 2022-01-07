@@ -57,7 +57,7 @@ namespace Uninstructed.Game.Player.Commands.Processors
             {
                 return ProcessingResult.Error("No distance argument in player move");
             }
-            if (float.TryParse(args[1], out var distance))
+            if (float.TryParse(args[0], out var distance))
             {
                 entity.SetMove(distance);
                 return ProcessingResult.Ok();
