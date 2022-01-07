@@ -39,7 +39,11 @@ namespace Uninstructed.Game.Player
 
         public bool TryStart(string command, string arguments)
         {
-            if (working) return false;
+            if (working)
+            {
+                return false;
+            }
+
             try
             {
                 program = new(command, arguments);
@@ -103,7 +107,6 @@ namespace Uninstructed.Game.Player
                 {
                     var command = new Command(input);
                     commandQueue.Enqueue(command);
-                    UnityEngine.Debug.Log($"Readed: {input}");
                 }
             }
         }
@@ -117,8 +120,6 @@ namespace Uninstructed.Game.Player
                     var result = commandProcessor.Process(command);
                     await WaitUntilPlayerBusy();
                     await PrintResult(result);
-                    UnityEngine.Debug.Log($"Processed: {command.Type} {command.Args} => {result.Status}; Output: {result.Output}");
-
                 }
             }
             Stop();

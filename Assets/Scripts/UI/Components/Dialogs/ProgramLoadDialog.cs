@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Uninstructed.UI.Components.Dialogs
@@ -51,7 +51,8 @@ namespace Uninstructed.UI.Components.Dialogs
             }
         }
 
-        public void Open() {
+        public void Open()
+        {
             statusText.text = "";
             Opened = true;
         }

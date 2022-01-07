@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Uninstructed.Game.Player.Commands.Models
+﻿namespace Uninstructed.Game.Player.Commands.Models
 {
     public class ProcessingResult
     {

@@ -33,7 +33,7 @@ namespace Uninstructed.Game
 
             GameObjectFactory = GetComponent<GameObjectFactory>();
             MapFileIO = new();
-            WorldGenerator = new (GameObjectFactory);
+            WorldGenerator = new(GameObjectFactory);
         }
 
         public void GenerateMap(GenerationSettings settings)

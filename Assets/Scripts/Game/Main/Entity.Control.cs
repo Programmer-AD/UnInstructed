@@ -18,7 +18,11 @@ namespace Uninstructed.Game.Main
 
         public void Update()
         {
-            if (World == null || World.Paused) return;
+            if (World == null || World.Paused)
+            {
+                return;
+            }
+
             if (action != null)
             {
                 if (!action.MoveNext())
@@ -119,7 +123,7 @@ namespace Uninstructed.Game.Main
 
         private IEnumerator Movement(float distance)
         {
-            bool ended = false;
+            var ended = false;
             var directedSpeed = MathF.Sign(distance) * moveSpeed;
             while (!ended)
             {
@@ -142,7 +146,7 @@ namespace Uninstructed.Game.Main
 
         private IEnumerator Rotation(float angle)
         {
-            bool ended = false;
+            var ended = false;
             var directedRotate = MathF.Sign(angle) * rotationSpeed;
             while (!ended)
             {
