@@ -45,11 +45,8 @@ namespace Uninstructed.Game.Player.IO
 
         public void Stop()
         {
-            if (Working)
-            {
-                process.Dispose();
-                Working = false;
-            }
+            process.Dispose();
+            Working = false;
         }
 
         public async Task<string> ReadLineAsync()
