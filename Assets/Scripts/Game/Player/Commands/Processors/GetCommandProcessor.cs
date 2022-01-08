@@ -17,7 +17,7 @@ namespace Uninstructed.Game.Player.Commands.Processors
         {
             this.player = player;
 
-            world = player.World;
+            world = player.Director.World;
             commandProcessors = MakeProcessors();
         }
 

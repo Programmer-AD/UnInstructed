@@ -8,35 +8,29 @@ using UnityEngine;
 
 namespace Uninstructed.Game
 {
-    public class GameObjectFactory : MonoBehaviour
+    public class GameObjectFactory
     {
-        [SerializeField]
-        private string blockPrefabsPath, entityPrefabsPath, itemPrefabsPath;
+        private readonly Dictionary<ItemType, Item> items;
+        private readonly Dictionary<EntityType, Entity> entities;
+        private readonly Dictionary<BlockType, Block> blocks;
 
-        private Dictionary<ItemType, Item> items;
-        private Dictionary<EntityType, Entity> entities;
-        private Dictionary<BlockType, Block> blocks;
+        private readonly Item unknownItem;
+        private readonly Entity unknownEntity;
+        private readonly Block unknownBlock;
 
-        private Item unknownItem;
-        private Entity unknownEntity;
-        private Block unknownBlock;
+        public GameDirector Director { get; }
 
-        public void Reset()
+        public GameObjectFactory(GameDirector director)
         {
-            blockPrefabsPath = "Block";
-            entityPrefabsPath = "Entity";
-            itemPrefabsPath = "Item";
-        }
+            Director = director;
 
-        public void Start()
-        {
-            items = GetStructured<ItemType, Item, ItemData>(itemPrefabsPath);
-            entities = GetStructured<EntityType, Entity, EntityData>(entityPrefabsPath);
-            blocks = GetStructured<BlockType, Block, BlockData>(blockPrefabsPath);
+            blocks = GetStructured<BlockType, Block, BlockData>("Block");
+            entities = GetStructured<EntityType, Entity, EntityData>("Entity");
+            items = GetStructured<ItemType, Item, ItemData>("Item");
 
-            items.TryGetValue(ItemType.Unknown, out unknownItem);
-            entities.TryGetValue(EntityType.Unknown, out unknownEntity);
             blocks.TryGetValue(BlockType.Unknown, out unknownBlock);
+            entities.TryGetValue(EntityType.Unknown, out unknownEntity);
+            items.TryGetValue(ItemType.Unknown, out unknownItem);
         }
 
         public Entity Load(EntityData data)
@@ -75,7 +69,8 @@ namespace Uninstructed.Game
             where TEnum : Enum
         {
             var prefab = GetPrefab(memento.Type, unknown, prefabs);
-            var result = Instantiate(prefab);
+            var result = UnityEngine.Object.Instantiate(prefab);
+            result.Director = Director;
             result.Load(memento, this);
             return result;
         }
@@ -86,7 +81,8 @@ namespace Uninstructed.Game
             where TEnum : Enum
         {
             var prefab = GetPrefab(type, unknown, prefabs);
-            var result = Instantiate(prefab);
+            var result = UnityEngine.Object.Instantiate(prefab);
+            result.Director = Director;
             result.InitDefault(this);
             return result;
         }

@@ -18,7 +18,7 @@ namespace Uninstructed.Game.Main
 
         public void Update()
         {
-            if (World == null || World.Paused)
+            if (Director.Paused)
             {
                 return;
             }
@@ -39,7 +39,7 @@ namespace Uninstructed.Game.Main
             get
             {
                 var coord = LookDirectionInt;
-                return World.Map[coord.x, coord.y];
+                return Director.World.Map[coord.x, coord.y];
             }
         }
 

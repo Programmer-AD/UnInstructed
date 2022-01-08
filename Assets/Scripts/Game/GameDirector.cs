@@ -14,12 +14,13 @@ namespace Uninstructed.Game
         public WorldFileIO MapFileIO { get; private set; }
         public GameObjectFactory GameObjectFactory { get; private set; }
         public WorldGenerator WorldGenerator { get; private set; }
-        public GameWorld GameWorld { get; private set; }
+        public GameWorld World { get; private set; }
         public PlayerController PlayerController { get; private set; }
 
         public string MapFilePath { get; set; }
 
         public bool LoadFinished { get; private set; }
+        public bool Paused { get; set; }
 
         public void Start()
         {
@@ -31,7 +32,7 @@ namespace Uninstructed.Game
             }
             DontDestroyOnLoad(gameObject);
 
-            GameObjectFactory = GetComponent<GameObjectFactory>();
+            GameObjectFactory = new GameObjectFactory(this);
             MapFileIO = new();
             WorldGenerator = new(GameObjectFactory);
         }
@@ -40,8 +41,8 @@ namespace Uninstructed.Game
         {
             LoadGameSceneAsync(() =>
             {
-                GameWorld.MapName = settings.MapName;
-                WorldGenerator.Generate(settings, GameWorld);
+                World.MapName = settings.MapName;
+                WorldGenerator.Generate(settings, World);
             });
         }
 
@@ -51,13 +52,13 @@ namespace Uninstructed.Game
             {
                 MapFilePath = filePath;
                 var instanceData = MapFileIO.Load(filePath);
-                GameWorld.Load(instanceData, GameObjectFactory);
+                World.Load(instanceData, GameObjectFactory);
             });
         }
 
         public void SaveMap(string fileName)
         {
-            var instanceData = GameWorld.Save();
+            var instanceData = World.Save();
             var path = MapFileIO.GetSavePath(fileName);
             MapFileIO.Save(path, instanceData);
         }
@@ -112,7 +113,8 @@ namespace Uninstructed.Game
             buildingScreen.Open();
             yield return null;
 
-            GameWorld = new GameWorld() { Paused = true };
+            Paused = true;
+            World = new GameWorld();
             buildingScreen.SetProgress(0.05f);
             yield return null;
 
@@ -120,13 +122,13 @@ namespace Uninstructed.Game
             buildingScreen.SetProgress(0.4f);
             yield return null;
 
-            GameWorld.Init();
+            World.Init();
             buildingScreen.SetProgress(0.99f);
             yield return null;
 
-            PlayerController = new(GameWorld.Player);
-            PlayerController.WorkStart += () => GameWorld.Paused = false;
-            PlayerController.ProgramStopped += () => GameWorld.Paused = true;
+            PlayerController = new(World.Player);
+            PlayerController.WorkStart += () => Paused = false;
+            PlayerController.ProgramStopped += () => Paused = true;
             buildingScreen.SetProgress(1f);
             yield return null;
 

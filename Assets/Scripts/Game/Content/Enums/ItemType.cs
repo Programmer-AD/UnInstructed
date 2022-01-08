@@ -4,6 +4,8 @@
     {
         Null = 0,
 
+        Stone, WoodStick, IronOre, IronIngot, Pickaxe, CraftBench,
+
         Unknown = int.MaxValue,
     }
 }

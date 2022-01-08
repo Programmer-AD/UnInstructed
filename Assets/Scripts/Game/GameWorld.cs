@@ -15,23 +15,12 @@ namespace Uninstructed.Game
         public IList<Item> DroppedItems { get; set; }
         public Map Map { get; set; }
         public string MapName { get; set; }
-        public bool Paused { get; set; }
 
         public Entity Player { get; private set; }
 
         public void Init()
         {
-            foreach (var entity in Entities)
-            {
-                entity.World = this;
-            }
-
-            foreach (var item in DroppedItems)
-            {
-                item.World = this;
-            }
-
-            Map.Init(this);
+            Map.Init();
             Player = Entities.First(x => x.Type == EntityType.Player);
         }
 

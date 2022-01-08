@@ -16,7 +16,7 @@ namespace Uninstructed.Game.Main
         private string defaultName;
         public string DefaultName => defaultName;
 
-        public GameWorld World { get; set; }
+        public GameDirector Director { get; set; }
         public string ShowName { get; set; }
 
         public virtual void Reset()

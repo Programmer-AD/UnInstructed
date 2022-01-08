@@ -48,7 +48,7 @@ namespace Uninstructed.UI
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    var playerPosition = sceneManager.GameDirector.GameWorld.Player.transform.position;
+                    var playerPosition = sceneManager.GameDirector.World.Player.transform.position;
                     var cameraPosition = camera.transform.position;
                     camera.transform.position = new Vector3(playerPosition.x, playerPosition.y, cameraPosition.z);
                 }

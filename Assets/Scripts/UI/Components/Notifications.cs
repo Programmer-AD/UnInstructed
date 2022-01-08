@@ -30,7 +30,7 @@ namespace Uninstructed.UI.Components
         {
             if (sceneManager.GameDirector.LoadFinished)
             {
-                var showPause = sceneManager.GameDirector.GameWorld.Paused;
+                var showPause = sceneManager.GameDirector.Paused;
                 pauseNotify.gameObject.SetActive(showPause);
 
                 var showConnect = showPause && !sceneManager.GameDirector.PlayerController.Working;
