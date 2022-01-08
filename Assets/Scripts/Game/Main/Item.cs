@@ -11,7 +11,6 @@ namespace Uninstructed.Game.Main
         private int maxCount;
         public int MaxCount => maxCount;
 
-
         private int count;
         public int Count
         {
@@ -21,8 +20,9 @@ namespace Uninstructed.Game.Main
                 count = Math.Clamp(value, 0, maxCount);
                 Optimize();
             }
-
         }
+
+        private Entity dropper;
 
         public override void Reset()
         {
@@ -37,13 +37,34 @@ namespace Uninstructed.Game.Main
             set => gameObject.SetActive(value);
         }
 
-        public void OnTriggerEnter(Collider other)
+        public void OnTriggerEnter2D(Collider2D other)
         {
-            var entity = other.GetComponent<Entity>();
-            if (entity != null)
+
+            if (other.TryGetComponent(out Entity entity))
             {
-                entity.Inventory.Add(this);
-                Optimize();
+                if (entity != dropper)
+                {
+                    entity.Inventory.Add(this);
+                    Optimize();
+                }
+            }
+            else if (other.TryGetComponent(out Item item))
+            {
+                if (item.Type == Type && Count + item.Count <= maxCount)
+                {
+                    item.Count += Count;
+                    Count = 0;
+                }
+            }
+        }
+        public void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.TryGetComponent(out Entity entity))
+            {
+                if (entity == dropper)
+                {
+                    dropper = null;
+                }
             }
         }
 
@@ -55,6 +76,22 @@ namespace Uninstructed.Game.Main
             }
         }
 
+        public void Drop(Entity dropper, int? count)
+        {
+            Item dropped = this;
+            if (count.HasValue && count != Count)
+            {
+                if (count > Count)
+                {
+                    return;
+                }
+                dropped = Instantiate(this);
+                dropped.count = count.Value;
+            }
+            dropped.dropper = dropper;
+            dropped.transform.position = dropper.transform.position;
+            dropped.OnScene = true;
+        }
 
         public event Action<Entity, Item> UsedSingle;
         public void Use(Entity user)

@@ -69,7 +69,7 @@ namespace Uninstructed.Game.Player.Commands.Processors
         {
             var anglePos = 0;
             var to = false;
-            if (args.Length == 2)
+            if (args.Length >= 2)
             {
                 if (args[0] == "to")
                 {
@@ -113,7 +113,7 @@ namespace Uninstructed.Game.Player.Commands.Processors
         private ProcessingResult ProcessUse(string[] args)
         {
             bool used;
-            if (args.Length == 1)
+            if (args.Length >= 1)
             {
                 if (args[0] == "onblock")
                 {
@@ -131,8 +131,20 @@ namespace Uninstructed.Game.Player.Commands.Processors
 
         private ProcessingResult ProcessDrop(string[] args)
         {
-            var droped = entity.Drop();
-            return droped ? ProcessingResult.Ok() : ProcessingResult.Error("No item selected to drop");
+            int? count = null;
+            if (args.Length >= 1)
+            {
+                if (int.TryParse(args[0], out var argCount))
+                {
+                    count = argCount;
+                }
+                else
+                {
+                    return ProcessingResult.Error("Wrong count format at drop");
+                }
+            }
+            var dropped = entity.Drop(count);
+            return dropped ? ProcessingResult.Ok() : ProcessingResult.Error("No item selected to drop or count is not enough");
         }
 
         private ProcessingResult ProcessInteract(string[] args)

@@ -53,8 +53,6 @@ namespace Uninstructed.Game.Main
             action = Rotation(angle, to);
         }
 
-        
-
         public bool UseItem()
         {
             if (HandItem != null)
@@ -85,13 +83,17 @@ namespace Uninstructed.Game.Main
             return false;
         }
 
-        public bool Drop()
+        public bool Drop(int? count)
         {
             var item = HandItem;
             if (item != null)
             {
+                if (count.HasValue && item.Count < count.Value)
+                {
+                    return false;
+                }
                 action = Other();
-                //TODO: Item drop
+                item.Drop(this, count);
                 return true;
             }
             return false;

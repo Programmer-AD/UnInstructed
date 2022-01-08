@@ -100,13 +100,13 @@ namespace Uninstructed.Game.Player.Commands.Processors
         {
             if (args.Length is 2 or 3)
             {
-                return ProcessingResult.Error("Wrong argumet count for get map");
+                return ProcessingResult.Error("Wrong argument count for get map");
             }
 
             var stringBuilder = new StringBuilder();
             int sx = 0, sy = 0, ex = world.Map.Width, ey = world.Map.Height;
 
-            if (args.Length == 4)
+            if (args.Length >= 4)
             {
                 if (int.TryParse(args[0], out sx) && int.TryParse(args[1], out sy) && int.TryParse(args[2], out ex) && int.TryParse(args[3], out ey))
                 {
