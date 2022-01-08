@@ -12,7 +12,7 @@ namespace Uninstructed.Game
     public class GameDirector : MonoBehaviour
     {
         public WorldFileIO MapFileIO { get; private set; }
-        public GameObjectFactory GameObjectFactory { get; private set; }
+        public GameObjectFactory Factory { get; private set; }
         public WorldGenerator WorldGenerator { get; private set; }
         public GameWorld World { get; private set; }
         public PlayerController PlayerController { get; private set; }
@@ -32,9 +32,9 @@ namespace Uninstructed.Game
             }
             DontDestroyOnLoad(gameObject);
 
-            GameObjectFactory = new GameObjectFactory(this);
+            Factory = new GameObjectFactory(this);
             MapFileIO = new();
-            WorldGenerator = new(GameObjectFactory);
+            WorldGenerator = new(Factory);
         }
 
         public void GenerateMap(GenerationSettings settings)
@@ -52,7 +52,7 @@ namespace Uninstructed.Game
             {
                 MapFilePath = filePath;
                 var instanceData = MapFileIO.Load(filePath);
-                World.Load(instanceData, GameObjectFactory);
+                World.Load(instanceData, Factory);
             });
         }
 

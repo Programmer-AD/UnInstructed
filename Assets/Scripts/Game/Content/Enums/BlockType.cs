@@ -4,7 +4,7 @@
     {
         Empty = 0,
 
-        BorderWall, Stone, Bash, IronOre, CraftBench, Launcher,
+        BorderWall, Stone, Bush, IronOre, CraftBench, Launcher,
 
         Unknown = int.MaxValue,
     }
