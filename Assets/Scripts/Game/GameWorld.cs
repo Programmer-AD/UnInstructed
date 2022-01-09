@@ -6,6 +6,7 @@ using Uninstructed.Game.Main;
 using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Saving.Interfaces;
 using Uninstructed.Game.Saving.Models;
+using UnityEngine;
 
 namespace Uninstructed.Game
 {
@@ -18,9 +19,23 @@ namespace Uninstructed.Game
 
         public Entity Player { get; private set; }
 
+        public GameObject ContentParent { get; private set; }
+
         public void Init()
         {
-            Map.Init();
+            ContentParent = new();
+            var contentTransform = ContentParent.transform;
+            foreach (var entity in Entities)
+            {
+                entity.transform.SetParent(contentTransform, true);
+            }
+            foreach (var item in DroppedItems)
+            {
+                item.transform.SetParent(contentTransform, true);
+            }
+            Map.Init(contentTransform);
+
+
             Player = Entities.First(x => x.Type == EntityType.Player);
         }
 

@@ -21,7 +21,7 @@ namespace Uninstructed.Game.Main
 
         public virtual void Reset()
         {
-            type = (TEnum)Enum.ToObject(typeof(TEnum), ushort.MaxValue); ;
+            type = (TEnum)Enum.ToObject(typeof(TEnum), int.MaxValue); ;
             defaultName = "Default name";
         }
 

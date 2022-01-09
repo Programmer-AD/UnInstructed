@@ -36,6 +36,8 @@ namespace Uninstructed.Game
             Factory = new GameObjectFactory(this);
             MapFileIO = new();
             WorldGenerator = new(Factory);
+
+            Application.backgroundLoadingPriority = ThreadPriority.High;
         }
 
         public void GenerateMap(GenerationSettings settings)
@@ -85,9 +87,12 @@ namespace Uninstructed.Game
             buildingScreen.Open();
             yield return null;
 
+            Destroy(World.ContentParent);
             World = null;
+            PlayerController = null;
 
             var sceneLoading = SceneManager.LoadSceneAsync("MainMenu");
+            sceneLoading.priority = int.MaxValue;
             sceneLoading.allowSceneActivation = true;
 
             var progress = sceneLoading.progress;

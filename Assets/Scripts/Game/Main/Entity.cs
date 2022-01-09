@@ -92,7 +92,7 @@ namespace Uninstructed.Game.Main
                 Quaternion.AngleAxis(memento.Rotation, Vector3.forward));
 
             Health = memento.Health;
-            SelectedInventorySlot = memento.SelectedInventorySlot;
+            selectedInventorySlot = memento.SelectedInventorySlot;
             Inventory = new Inventory(inventorySize);
 
             var position = 0;
@@ -100,7 +100,9 @@ namespace Uninstructed.Game.Main
             {
                 if (itemData != null)
                 {
-                    Inventory[position++] = factory.Load(itemData);
+                    var item = factory.Load(itemData);
+                    item.OnScene = false;
+                    Inventory[position++] = item;
                 }
             }
         }
