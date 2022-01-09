@@ -146,6 +146,6 @@ MonoBehaviour:
   activatedSprite: {fileID: 21300000, guid: 6d390acf3a9aa0945b1dc0b85d8213e8, type: 3}
   requiredItems:
   - ItemType: 4
-    Count: 40
+    Count: 20
   - ItemType: 2
     Count: 40
