@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Uninstructed.Game.Content.Enums;
+﻿using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using UnityEngine;
 
 namespace Uninstructed.Game.Content.Items
 {
-    public class BlockItem:MonoBehaviour
+    public class BlockItem : MonoBehaviour
     {
         [SerializeField]
         private BlockType places;
@@ -37,10 +32,10 @@ namespace Uninstructed.Game.Content.Items
             {
                 item.Count--;
                 block = entity.Director.Factory.Create(places);
-                block.transform.position = new Vector3(x,y);
+                block.transform.position = new Vector3(x, y);
                 map[x, y] = block;
             }
-            
+
         }
     }
 }

@@ -80,12 +80,13 @@ namespace Uninstructed.Game
             LoadFinished = false;
             Paused = true;
             PlayerController.Stop();
-            World = null;
 
             var buildingScreen = FindObjectOfType<LoadingScreen>(true);
             buildingScreen.Open();
             yield return null;
-            
+
+            World = null;
+
             var sceneLoading = SceneManager.LoadSceneAsync("MainMenu");
             sceneLoading.allowSceneActivation = true;
 

@@ -10,9 +10,9 @@ namespace Uninstructed.Game.Mapping
     {
         private static void RectangleFor(int x, int y, int width, int height, Action<int, int> action)
         {
-            for (int dx = 0; dx < width; dx++)
+            for (var dx = 0; dx < width; dx++)
             {
-                for (int dy = 0; dy < height; dy++)
+                for (var dy = 0; dy < height; dy++)
                 {
                     action(x + dx, y + dy);
                 }
@@ -226,21 +226,23 @@ namespace Uninstructed.Game.Mapping
                 if (map[x, y] != BlockType.Empty)
                 {
                     var (newX, newY) = FindNearestEmpty(x, y);
-                    entities[i] =(entityType, newX, newY);
+                    entities[i] = (entityType, newX, newY);
                 }
             }
         }
 
         private (int x, int y) FindNearestEmpty(int x, int y, int maxRange = 15)
         {
-            bool IsEmpty(int x, int y) =>
-                x >= 0 && y >= 0 && x < settings.Width && y < settings.Height && map[x, y] == BlockType.Empty;
-
-            for (int range = 1; range < maxRange; range++)
+            bool IsEmpty(int x, int y)
             {
-                int actions = 4 * range;
+                return x >= 0 && y >= 0 && x < settings.Width && y < settings.Height && map[x, y] == BlockType.Empty;
+            }
+
+            for (var range = 1; range < maxRange; range++)
+            {
+                var actions = 4 * range;
                 int dx = 0, dy = -range;
-                for (int i = 0; i < actions; i++)
+                for (var i = 0; i < actions; i++)
                 {
                     if (IsEmpty(x + dx, y + dy))
                     {

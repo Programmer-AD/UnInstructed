@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Uninstructed.Game.Main;
+﻿using Uninstructed.Game.Main;
 using UnityEngine;
 
 namespace Uninstructed.Game.Content.Items
 {
-    public class BlockBreaker:MonoBehaviour
+    public class BlockBreaker : MonoBehaviour
     {
         [SerializeField, Min(1)]
         private float damage;

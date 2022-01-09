@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Uninstructed.Game.Content.Enums;
+﻿using Uninstructed.Game.Content.Enums;
 
 namespace Uninstructed.Game.Mapping
 {
-    partial class WorldGenerator
+    public partial class WorldGenerator
     {
         private void MakeCaveBiom(int biomX, int biomY)
         {
@@ -101,7 +96,7 @@ namespace Uninstructed.Game.Mapping
                 {
                     map[x, y] = BlockType.IronOre;
                 }
-                if (map[x,y]==BlockType.Empty && random.Next(6) == 0)
+                if (map[x, y] == BlockType.Empty && random.Next(6) == 0)
                 {
                     AddItem(ItemType.Stone, random.Next(1, 3), x, y);
                 }

@@ -79,7 +79,7 @@ namespace Uninstructed.Game.Main
 
         public void Drop(Entity dropper, int? count)
         {
-            Item dropped = this;
+            var dropped = this;
             if (count.HasValue && count != Count)
             {
                 if (count > Count)

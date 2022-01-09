@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Uninstructed.Game.Player.IO
@@ -8,7 +7,7 @@ namespace Uninstructed.Game.Player.IO
     {
         private readonly Process process;
 
-        private bool working =false;
+        private bool working = false;
         public bool Working => working && !process.HasExited;
 
         public PlayerProgram(string command, string args)

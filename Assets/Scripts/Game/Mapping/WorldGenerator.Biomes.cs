@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Uninstructed.Game.Content.Enums;
-
-namespace Uninstructed.Game.Mapping
+﻿namespace Uninstructed.Game.Mapping
 {
-    partial class WorldGenerator
+    public partial class WorldGenerator
     {
         private const int requiredSticks = 40;
         private const int requiredIronOre = 20;
@@ -53,7 +46,9 @@ namespace Uninstructed.Game.Mapping
         }
 
         private (int x, int y) GetBiomStart(int biomX, int biomY)
-            => (biomX * biomeSize, biomY * biomeSize);
+        {
+            return (biomX * biomeSize, biomY * biomeSize);
+        }
 
         private bool IsBiomOfType(int biomX, int biomY, BiomeType type, bool defaultResult)
         {

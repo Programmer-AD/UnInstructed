@@ -11,8 +11,8 @@ namespace Uninstructed.Game
 {
     public class GameWorld : ISaveable<GameWorldData>
     {
-        public IList<Entity> Entities { get; set; }
-        public IList<Item> DroppedItems { get; set; }
+        public List<Entity> Entities { get; set; }
+        public List<Item> DroppedItems { get; set; }
         public Map Map { get; set; }
         public string MapName { get; set; }
 

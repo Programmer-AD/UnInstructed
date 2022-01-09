@@ -122,7 +122,8 @@ namespace Uninstructed.Game.Player
                         await WaitUntilPlayerBusy();
                         await PrintResult(result);
                     }
-                }catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     UnityEngine.Debug.LogException(ex);
                 }
