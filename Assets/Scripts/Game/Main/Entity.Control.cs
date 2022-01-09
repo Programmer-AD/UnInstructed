@@ -11,7 +11,7 @@ namespace Uninstructed.Game.Main
         private IEnumerator action;
         public bool Busy => action != null;
 
-        public void Start()
+        public void Awake()
         {
             rigidbody = GetComponent<Rigidbody2D>();
         }
@@ -152,24 +152,27 @@ namespace Uninstructed.Game.Main
                 }
             }
 
-            var ended = false;
-            var directedRotate = MathF.Sign(angle) * rotationSpeed;
-            while (!ended)
+            if (angle != 0)
             {
-                var directed = Time.deltaTime * directedRotate;
-                float rotate;
-                if (angle / directed <= 1)
+                var ended = false;
+                var directedRotate = MathF.Sign(angle) * rotationSpeed;
+                while (!ended)
                 {
-                    rotate = angle;
-                    ended = true;
+                    var directed = Time.deltaTime * directedRotate;
+                    float rotate;
+                    if (angle / directed <= 1)
+                    {
+                        rotate = angle;
+                        ended = true;
+                    }
+                    else
+                    {
+                        angle -= directed;
+                        rotate = directed;
+                    }
+                    rigidbody.rotation = EscapeAngle(rigidbody.rotation + rotate);
+                    yield return null;
                 }
-                else
-                {
-                    angle -= directed;
-                    rotate = directed;
-                }
-                rigidbody.rotation = EscapeAngle(rigidbody.rotation + rotate);
-                yield return null;
             }
         }
 

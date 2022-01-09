@@ -77,6 +77,7 @@ namespace Uninstructed.UI.Components.Dialogs
             {
                 statusText.color = successColor;
                 statusText.text = "Программа успешно подключена!";
+                Opened = false;
             }
             else
             {

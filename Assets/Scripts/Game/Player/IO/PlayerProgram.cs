@@ -8,12 +8,11 @@ namespace Uninstructed.Game.Player.IO
     {
         private readonly Process process;
 
-        public bool Working { get; private set; }
+        private bool working =false;
+        public bool Working => working && !process.HasExited;
 
         public PlayerProgram(string command, string args)
         {
-            Working = false;
-
             process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
@@ -28,25 +27,22 @@ namespace Uninstructed.Game.Player.IO
                     FileName = command,
                     Arguments = args
                 },
-                EnableRaisingEvents = true
             };
-
-            process.Exited += ExitedHandler;
         }
 
         public void Start()
         {
-            if (!Working)
+            if (!working)
             {
                 process.Start();
-                Working = true;
+                working = true;
             }
         }
 
         public void Stop()
         {
+            working = false;
             process.Dispose();
-            Working = false;
         }
 
         public async Task<string> ReadLineAsync()
@@ -62,11 +58,6 @@ namespace Uninstructed.Game.Player.IO
                 await process.StandardInput.WriteLineAsync(data);
                 await process.StandardInput.FlushAsync();
             }
-        }
-
-        private void ExitedHandler(object sender, EventArgs e)
-        {
-            Working = false;
         }
     }
 }

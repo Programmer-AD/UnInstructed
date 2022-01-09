@@ -27,10 +27,10 @@ namespace Uninstructed.Game
         public void Load(GameWorldData memento, GameObjectFactory factory)
         {
             MapName = memento.MapName;
-            Entities = memento.Entities.Select(x => factory.Load(x)).ToList();
-            DroppedItems = memento.DroppedItems.Select(x => factory.Load(x)).ToList();
             Map = new Map();
             Map.Load(memento.Map, factory);
+            DroppedItems = memento.DroppedItems.Select(x => factory.Load(x)).ToList();
+            Entities = memento.Entities.Select(x => factory.Load(x)).ToList();
         }
 
         public GameWorldData Save()

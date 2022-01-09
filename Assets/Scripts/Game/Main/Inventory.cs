@@ -46,7 +46,7 @@ namespace Uninstructed.Game.Main
                     var emptySlot = slots.Where(x => x.Item == null).FirstOrDefault();
                     if (emptySlot != null)
                     {
-                        emptySlot.Item = UnityEngine.Object.Instantiate(item);
+                        emptySlot.Item = item;
                         emptySlot.Item.OnScene = false;
                     }
                 }

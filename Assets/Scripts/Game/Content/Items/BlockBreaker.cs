@@ -18,7 +18,7 @@ namespace Uninstructed.Game.Content.Items
             damage = 1;
         }
 
-        public void Start()
+        public void Awake()
         {
             var item = GetComponent<Item>();
             item.UsedOnBlock += UsedOnBlock;

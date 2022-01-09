@@ -73,14 +73,13 @@ namespace Uninstructed.Game.Player
                 started = false;
 
                 tokenSource.Cancel();
-                tokenSource.Dispose();
 
                 program.Stop();
-                program = null;
-
-                tokenSource = null;
                 prereadTask = null;
                 executeTask = null;
+
+                tokenSource.Dispose();
+                tokenSource = null;
 
                 ProgramStopped?.Invoke();
             }
@@ -115,14 +114,17 @@ namespace Uninstructed.Game.Player
         {
             while (working && (program.Working || commandQueue.Count > 0))
             {
-                if (!Player.Busy && commandQueue.TryDequeue(out var command))
+                try
                 {
-                    if (started || command.Type != CommandType.Player)
+                    if (!Player.Busy && commandQueue.TryDequeue(out var command) && (started || command.Type != CommandType.Player))
                     {
                         var result = commandProcessor.Process(command);
                         await WaitUntilPlayerBusy();
                         await PrintResult(result);
                     }
+                }catch (Exception ex)
+                {
+                    UnityEngine.Debug.LogException(ex);
                 }
             }
             Stop();

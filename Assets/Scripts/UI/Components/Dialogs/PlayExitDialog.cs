@@ -40,8 +40,8 @@ namespace Uninstructed.UI.Components.Dialogs
 
         private void OnExitClick()
         {
-            manager.GameDirector.LoadMenus();
             Opened = false;
+            manager.GameDirector.LoadMenus();
         }
 
         private void OnSaveClick()

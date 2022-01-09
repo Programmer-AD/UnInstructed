@@ -12,6 +12,7 @@ namespace Uninstructed.UI
         private GameSceneManager sceneManager;
 
         private new Camera camera;
+        private bool startCentralized = false;
 
         public void Reset()
         {
@@ -29,7 +30,7 @@ namespace Uninstructed.UI
 
         public void Update()
         {
-            if (sceneManager.GameDirector.LoadFinished)
+            if (sceneManager.GameDirector.LoadFinished && Application.isFocused)
             {
                 var wheelScroll = Input.GetAxis("Mouse ScrollWheel") * scaleSpeed;
                 if (wheelScroll != 0)
@@ -46,11 +47,13 @@ namespace Uninstructed.UI
                     camera.transform.Translate(-dx, -dy, 0);
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) || !startCentralized)
                 {
                     var playerPosition = sceneManager.GameDirector.World.Player.transform.position;
                     var cameraPosition = camera.transform.position;
                     camera.transform.position = new Vector3(playerPosition.x, playerPosition.y, cameraPosition.z);
+
+                    startCentralized = true;
                 }
             }
         }

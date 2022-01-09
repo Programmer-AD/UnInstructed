@@ -19,7 +19,7 @@ namespace Uninstructed.Game.Content.Items
             places = BlockType.Unknown;
         }
 
-        public void Start()
+        public void Awake()
         {
             var item = GetComponent<Item>();
             item.UsedSingle += OnUsedSingle;

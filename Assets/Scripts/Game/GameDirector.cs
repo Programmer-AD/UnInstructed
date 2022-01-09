@@ -6,6 +6,7 @@ using Uninstructed.Game.Saving.IO;
 using Uninstructed.UI.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting;
 
 namespace Uninstructed.Game
 {
@@ -53,6 +54,7 @@ namespace Uninstructed.Game
                 MapFilePath = filePath;
                 var instanceData = MapFileIO.Load(filePath);
                 World.Load(instanceData, Factory);
+                instanceData = null;
             });
         }
 
@@ -65,18 +67,39 @@ namespace Uninstructed.Game
 
         public void LoadMenus()
         {
-
-            var loadAsync = SceneManager.LoadSceneAsync("MainMenu");
-            loadAsync.priority = int.MaxValue;
-            loadAsync.completed += _ =>
-            {
-                GC.Collect();
-            };
+            StartCoroutine(MenuSceneLoading());
         }
 
         private void LoadGameSceneAsync(Action onComplete)
         {
             StartCoroutine(GameSceneLoading(onComplete));
+        }
+
+        private IEnumerator MenuSceneLoading()
+        {
+            LoadFinished = false;
+            Paused = true;
+            PlayerController.Stop();
+            World = null;
+
+            var buildingScreen = FindObjectOfType<LoadingScreen>(true);
+            buildingScreen.Open();
+            yield return null;
+            
+            var sceneLoading = SceneManager.LoadSceneAsync("MainMenu");
+            sceneLoading.allowSceneActivation = true;
+
+            var progress = sceneLoading.progress;
+            while (!sceneLoading.isDone)
+            {
+                var newProgress = sceneLoading.progress;
+                if (progress != newProgress)
+                {
+                    progress = newProgress;
+                    buildingScreen.SetProgress(progress);
+                }
+                yield return null;
+            }
         }
 
         private IEnumerator GameSceneLoading(Action onComplete)
@@ -109,11 +132,11 @@ namespace Uninstructed.Game
 
         private IEnumerator GameSceneBuilding(Action onComplete)
         {
+            Paused = true;
             var buildingScreen = FindObjectOfType<LoadingScreen>(true);
             buildingScreen.Open();
             yield return null;
 
-            Paused = true;
             World = new GameWorld();
             buildingScreen.SetProgress(0.05f);
             yield return null;
@@ -123,15 +146,18 @@ namespace Uninstructed.Game
             yield return null;
 
             World.Init();
-            buildingScreen.SetProgress(0.99f);
+            buildingScreen.SetProgress(0.94f);
             yield return null;
 
             PlayerController = new(World.Player);
             PlayerController.WorkStart += () => Paused = false;
             PlayerController.ProgramStopped += () => Paused = true;
-            buildingScreen.SetProgress(1f);
+            buildingScreen.SetProgress(0.95f);
             yield return null;
 
+            GarbageCollector.CollectIncremental(1000 * 1000 * 5);
+            buildingScreen.SetProgress(1.0f);
+            yield return null;
 
             LoadFinished = true;
             buildingScreen.Close();

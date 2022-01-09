@@ -40,7 +40,7 @@ namespace Uninstructed.Game.Main
         public void OnTriggerEnter2D(Collider2D other)
         {
 
-            if (other.TryGetComponent(out Entity entity))
+            if (other.gameObject.TryGetComponent(out Entity entity))
             {
                 if (entity != dropper)
                 {
@@ -48,7 +48,7 @@ namespace Uninstructed.Game.Main
                     Optimize();
                 }
             }
-            else if (other.TryGetComponent(out Item item))
+            else if (other.gameObject.TryGetComponent(out Item item))
             {
                 if (item.Type == Type && Count + item.Count <= maxCount)
                 {
@@ -59,7 +59,7 @@ namespace Uninstructed.Game.Main
         }
         public void OnTriggerExit2D(Collider2D other)
         {
-            if (other.TryGetComponent(out Entity entity))
+            if (other.gameObject.TryGetComponent(out Entity entity))
             {
                 if (entity == dropper)
                 {
@@ -72,6 +72,7 @@ namespace Uninstructed.Game.Main
         {
             if (Count == 0)
             {
+                OnScene = false;
                 Destroy(this);
             }
         }
