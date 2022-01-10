@@ -35,6 +35,14 @@ namespace Uninstructed.Game
         public void Awake()
         {
             loadingScreen = FindObjectOfType<LoadingScreen>();
+            Application.wantsToQuit += () =>
+            {
+                if (!Application.isEditor)
+                {
+                    System.Diagnostics.Process.GetCurrentProcess().Kill();
+                }
+                return true;
+            };
             StartCoroutine(StartLoading());
         }
 
