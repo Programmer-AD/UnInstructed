@@ -30,7 +30,7 @@ namespace Uninstructed.Game.Player
         {
             Player = player;
 
-            commandProcessor = new(player, OnWorkStart, OnWorkEnd);
+            commandProcessor = new(player, OnWorkStart, OnWorkStop);
             commandQueue = new();
 
             working = false;
@@ -67,22 +67,20 @@ namespace Uninstructed.Game.Player
         public event Action ProgramStopped;
         public void Stop()
         {
-            if (working)
-            {
-                working = false;
-                started = false;
+            working = false;
+            started = false;
 
-                tokenSource.Cancel();
+            tokenSource?.Cancel();
 
-                program.Stop();
-                prereadTask = null;
-                executeTask = null;
+            program?.Stop();
+            prereadTask = null;
+            executeTask = null;
+            program = null;
 
-                tokenSource.Dispose();
-                tokenSource = null;
+            tokenSource?.Dispose();
+            tokenSource = null;
 
-                ProgramStopped?.Invoke();
-            }
+            ProgramStopped?.Invoke();
         }
 
         public event Action WorkStart;
@@ -92,9 +90,9 @@ namespace Uninstructed.Game.Player
             WorkStart?.Invoke();
         }
 
-        private void OnWorkEnd()
+        private void OnWorkStop()
         {
-            Stop();
+            working = false;
         }
 
         private async Task PrereadTaskMain()
