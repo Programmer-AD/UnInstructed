@@ -50,7 +50,6 @@ namespace Uninstructed.Game.Saving.IO
         public GameWorldData Load(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            var formatter=new BinaryFormatter();
             _ = formatter.Deserialize(stream);
             var result = formatter.Deserialize(stream);
             return (GameWorldData)result;

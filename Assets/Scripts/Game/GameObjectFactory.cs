@@ -4,7 +4,6 @@ using System.Linq;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Saving.Models;
-using UnityEditor;
 using UnityEngine;
 
 namespace Uninstructed.Game
@@ -95,7 +94,7 @@ namespace Uninstructed.Game
             var result = CreateEmpty<TEnum, TMemento, TObject>(type, unknown, prefabs);
             result.InitDefault(this);
             return result;
-}
+        }
 
         private TObject CreateEmpty<TEnum, TMemento, TObject>(TEnum type, TObject unknown, Dictionary<TEnum, TObject> prefabs)
             where TObject : GameObjectBase<TEnum, TMemento>

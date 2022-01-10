@@ -19,10 +19,7 @@ namespace Uninstructed.UI.Components
         public bool Opened
         {
             get => gameObject.activeSelf;
-            private set
-            {
-                gameObject.SetActive(value);
-            }
+            private set => gameObject.SetActive(value);
         }
 
         public void Reset()

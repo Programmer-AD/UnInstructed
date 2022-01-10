@@ -6,7 +6,6 @@ using Uninstructed.Game.Player;
 using Uninstructed.Game.Saving.IO;
 using Uninstructed.UI.Components;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
 
 namespace Uninstructed.Game
