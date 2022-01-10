@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Player;
 using Uninstructed.Game.Saving.IO;
@@ -12,9 +13,17 @@ namespace Uninstructed.Game
 {
     public class GameDirector : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject MainMenuScenePrefab, GameScenePrefab;
+
+        [SerializeField]
+        private LoadingScreen loadingScreen;
+
         public WorldFileIO MapFileIO { get; private set; }
         public GameObjectFactory Factory { get; private set; }
         public WorldGenerator WorldGenerator { get; private set; }
+
+        private GameObject currentScene;
         public GameWorld World { get; private set; }
         public PlayerController PlayerController { get; private set; }
 
@@ -25,19 +34,8 @@ namespace Uninstructed.Game
 
         public void Awake()
         {
-            var existingDirector = FindObjectOfType<GameDirector>();
-            if (existingDirector != this && existingDirector != null)
-            {
-                Destroy(this);
-                return;
-            }
-            DontDestroyOnLoad(gameObject);
-
-            Factory = new GameObjectFactory(this);
-            MapFileIO = new();
-            WorldGenerator = new(Factory);
-
-            Application.backgroundLoadingPriority = ThreadPriority.High;
+            loadingScreen = FindObjectOfType<LoadingScreen>();
+            StartCoroutine(StartLoading());
         }
 
         public void GenerateMap(GenerationSettings settings)
@@ -69,112 +67,167 @@ namespace Uninstructed.Game
 
         public void LoadMenus()
         {
-            StartCoroutine(MenuSceneLoading());
+            SwitchScenesAsync(MainMenuScenePrefab, oldSceneUnload: GameSceneUnload());
         }
 
         private void LoadGameSceneAsync(Action onComplete)
         {
-            StartCoroutine(GameSceneLoading(onComplete));
+            SwitchScenesAsync(GameScenePrefab, newSceneLoad: GameSceneLoad(onComplete));
         }
 
-        private IEnumerator MenuSceneLoading()
+        private IEnumerator StartLoading()
         {
-            LoadFinished = false;
-            Paused = true;
-            PlayerController.Stop();
-
-            var buildingScreen = FindObjectOfType<LoadingScreen>(true);
-            buildingScreen.Text = "Выгрузка...";
-            buildingScreen.Open();
-            yield return null;
-
-            Factory.DestroyContext();
-            yield return new WaitForEndOfFrame();
-
-            World = null;
-            PlayerController = null;
-            GarbageCollector.CollectIncremental(5 * 1000 * 1000);
-            yield return null;
-
-            var sceneLoading = SceneManager.LoadSceneAsync("MainMenu");
-            sceneLoading.priority = int.MaxValue;
-            sceneLoading.allowSceneActivation = true;
-            yield return null;
-
-            var progress = 0f;
-            while (!sceneLoading.isDone)
-            {
-                var newProgress = sceneLoading.progress;
-                if (progress != newProgress)
-                {
-                    progress = newProgress;
-                    buildingScreen.SetProgress(progress);
-                }
-                yield return null;
-            }
-        }
-
-        private IEnumerator GameSceneLoading(Action onComplete)
-        {
-            LoadFinished = false;
-
-            var loadingScreen = FindObjectOfType<LoadingScreen>(true);
             loadingScreen.Open();
             yield return null;
 
-            var sceneLoading = SceneManager.LoadSceneAsync("GameScene");
-            sceneLoading.allowSceneActivation = true;
-            sceneLoading.completed += _ =>
-            {
-                StartCoroutine(GameSceneBuilding(onComplete));
-            };
+            Factory = new GameObjectFactory(this);
+            MapFileIO = new();
+            WorldGenerator = new(Factory);
+            loadingScreen.SetProgress(0.9f);
+            yield return null;
 
-            var progress = sceneLoading.progress;
-            while (!sceneLoading.isDone)
+            currentScene = Instantiate(MainMenuScenePrefab);
+            loadingScreen.SetProgress(1f);
+            yield return null;
+
+            loadingScreen.Close();
+        }
+
+        private void SwitchScenesAsync(GameObject newScenePrefab,
+            IEnumerator<float> oldSceneUnload = null,
+            IEnumerator<float> newSceneLoad = null)
+        {
+            StartCoroutine(SceneSwitch(newScenePrefab, oldSceneUnload, newSceneLoad));
+        }
+
+        private IEnumerator SceneSwitch(GameObject newScenePrefab,
+            IEnumerator<float> oldSceneUnload = null,
+            IEnumerator<float> newSceneLoad = null)
+        {
+            LoadFinished = false;
+            loadingScreen.Open();
+            currentScene.SetActive(false);
+            yield return null;
+
+            var unload = SceneSwitch_UnloadOld(oldSceneUnload);
+            while (unload.MoveNext())
             {
-                var newProgress = sceneLoading.progress;
-                if (progress != newProgress)
-                {
-                    progress = newProgress;
-                    loadingScreen.SetProgress(progress);
-                }
+                yield return unload.Current;
+            }
+
+            var cleaning = SceneSwitch_CleanMemory();
+            while (cleaning.MoveNext())
+            {
+                yield return cleaning.Current;
+            }
+
+            var load = SceneSwitch_LoadNew(newScenePrefab, newSceneLoad);
+            while (load.MoveNext())
+            {
+                yield return load.Current;
+            }
+
+            loadingScreen.Close();
+            currentScene.SetActive(true);
+            yield return null;
+
+            LoadFinished = true;
+            yield return null;
+        }
+
+        private IEnumerator SceneSwitch_UnloadOld(IEnumerator<float> oldSceneUnload = null)
+        {
+            loadingScreen.SetProgress(0);
+            loadingScreen.Text = "Выгрузка...";
+            yield return null;
+
+            var unload = ProgressableAction(oldSceneUnload);
+            while (unload.MoveNext())
+            {
+                yield return null;
+            }
+
+            Destroy(currentScene);
+            loadingScreen.SetProgress(1);
+            yield return null;
+        }
+
+        private IEnumerator SceneSwitch_CleanMemory()
+        {
+            loadingScreen.Text = "Очистка...";
+            for (float i = 0; i <= 1; i += 0.1f)
+            {
+                GarbageCollector.CollectIncremental(10 * 1000 * 1000UL);
+                loadingScreen.SetProgress(i);
                 yield return null;
             }
         }
 
-        private IEnumerator GameSceneBuilding(Action onComplete)
+        private IEnumerator SceneSwitch_LoadNew(GameObject newScenePrefab, IEnumerator<float> newSceneLoad = null)
+        {
+            loadingScreen.Text = "Загрузка...";
+            loadingScreen.SetProgress(0);
+            currentScene = Instantiate(newScenePrefab);
+            currentScene.SetActive(false);
+            yield return null;
+
+            if (newSceneLoad != null)
+            {
+                var load = ProgressableAction(newSceneLoad);
+                while (load.MoveNext())
+                {
+                    yield return null;
+                }
+            }
+            loadingScreen.SetProgress(1);
+            yield return null;
+        }
+
+        private IEnumerator ProgressableAction(IEnumerator<float> action)
+        {
+            if (action != null)
+            {
+                while (action.MoveNext())
+                {
+                    var progress = action.Current;
+                    progress = Math.Clamp(progress, 0.01f, 0.99f);
+                    loadingScreen.SetProgress(progress);
+                    yield return null;
+                }
+            }
+        }
+
+        private IEnumerator<float> GameSceneUnload()
         {
             Paused = true;
-            var buildingScreen = FindObjectOfType<LoadingScreen>(true);
-            buildingScreen.Open();
-            yield return null;
+            PlayerController.Stop();
+            yield return 0.1f;
 
+            Factory.DestroyContext();
+            yield return 0.9f;
+
+            World = null;
+            PlayerController = null;
+            yield return 1f;
+        }
+
+        private IEnumerator<float> GameSceneLoad(Action onComplete)
+        {
+            Paused = true;
             Factory.CreateContext();
             World = new GameWorld();
-            buildingScreen.SetProgress(0.05f);
-            yield return null;
+            yield return 0.05f;
 
             onComplete();
-            buildingScreen.SetProgress(0.4f);
-            yield return null;
+            yield return 0.4f;
 
             World.Init();
-            buildingScreen.SetProgress(0.94f);
-            yield return null;
+            yield return 0.95f;
 
             PlayerController = new(World.Player);
             PlayerController.WorkStart += () => Paused = false;
             PlayerController.ProgramStopped += () => Paused = true;
-            buildingScreen.SetProgress(0.95f);
-            yield return null;
-
-            GarbageCollector.CollectIncremental(1000 * 1000 * 5);
-            buildingScreen.SetProgress(1.0f);
-            yield return null;
-
-            LoadFinished = true;
-            buildingScreen.Close();
-            yield return null;
+            yield return 1;
         }
     }
 }

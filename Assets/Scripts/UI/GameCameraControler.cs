@@ -1,4 +1,5 @@
 ﻿using System;
+using Uninstructed.Game;
 using UnityEngine;
 
 namespace Uninstructed.UI
@@ -8,9 +9,7 @@ namespace Uninstructed.UI
         [SerializeField]
         private float moveSpeed, scaleSpeed, minScale, maxScale;
 
-        [SerializeField]
-        private GameSceneManager sceneManager;
-
+        private GameDirector director;
         private new Camera camera;
         private bool startCentralized = false;
 
@@ -20,17 +19,17 @@ namespace Uninstructed.UI
             scaleSpeed = 1;
             minScale = 1;
             maxScale = 12;
-            sceneManager = null;
         }
 
         public void Start()
         {
             camera = GetComponent<Camera>();
+            director = FindObjectOfType<GameDirector>();
         }
 
         public void Update()
         {
-            if (sceneManager.GameDirector.LoadFinished && Application.isFocused)
+            if (director.LoadFinished && director.World != null && Application.isFocused)
             {
                 var wheelScroll = Input.GetAxis("Mouse ScrollWheel") * scaleSpeed;
                 if (wheelScroll != 0)
@@ -49,7 +48,7 @@ namespace Uninstructed.UI
 
                 if (Input.GetKeyDown(KeyCode.Space) || !startCentralized)
                 {
-                    var playerPosition = sceneManager.GameDirector.World.Player.transform.position;
+                    var playerPosition = director.World.Player.transform.position;
                     var cameraPosition = camera.transform.position;
                     camera.transform.position = new Vector3(playerPosition.x, playerPosition.y, cameraPosition.z);
 

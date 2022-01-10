@@ -10,9 +10,6 @@ namespace Uninstructed.UI.Components
         [SerializeField]
         private ProgressShower progressShower;
 
-        [SerializeField]
-        private GameObject menus;
-
         public string Text
         {
             get => screenText.text;
@@ -25,17 +22,13 @@ namespace Uninstructed.UI.Components
             private set
             {
                 gameObject.SetActive(value);
-                if (menus != null)
-                {
-                    menus.SetActive(!value);
-                }
             }
         }
 
         public void Reset()
         {
             progressShower = null;
-            menus = null;
+            screenText = null;
         }
 
         public void SetProgress(float progress)

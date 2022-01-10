@@ -44,7 +44,7 @@ namespace Uninstructed.Game
 
         public void DestroyContext()
         {
-            UnityEngine.Object.Destroy(containerTransform);
+            UnityEngine.Object.Destroy(containerTransform.gameObject);
         }
 
         public Entity Load(EntityData data)
