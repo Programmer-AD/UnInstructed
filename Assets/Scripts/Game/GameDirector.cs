@@ -84,6 +84,7 @@ namespace Uninstructed.Game
             PlayerController.Stop();
 
             var buildingScreen = FindObjectOfType<LoadingScreen>(true);
+            buildingScreen.Text = "Выгрузка...";
             buildingScreen.Open();
             yield return null;
 

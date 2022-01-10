@@ -5,10 +5,19 @@ namespace Uninstructed.UI.Components
     public class LoadingScreen : MonoBehaviour
     {
         [SerializeField]
+        private TMPro.TMP_Text screenText;
+
+        [SerializeField]
         private ProgressShower progressShower;
 
         [SerializeField]
         private GameObject menus;
+
+        public string Text
+        {
+            get => screenText.text;
+            set => screenText.text = value;
+        }
 
         public bool Opened
         {
