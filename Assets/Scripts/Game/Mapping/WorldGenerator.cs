@@ -193,7 +193,7 @@ namespace Uninstructed.Game.Mapping
             var droppedSticks = itemEnumerable.Sum(x => x.type == ItemType.IronOre ? x.count : 0);
             var addSticks = requiredSticks - (5 * bushCount + droppedSticks);
 
-            var ironOre = mapEnumerable.Count(x => x == BlockType.Stone);
+            var ironOre = mapEnumerable.Count(x => x == BlockType.IronOre);
             var addIronOre = requiredIronOre - ironOre;
 
             (var x, var y) = GetRandomPoint(10);

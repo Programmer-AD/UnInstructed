@@ -44,6 +44,7 @@ namespace Uninstructed.Game
         {
             LoadGameSceneAsync(() =>
             {
+                MapFilePath = "";
                 WorldGenerator.Generate(settings, World);
             });
         }
