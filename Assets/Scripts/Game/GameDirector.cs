@@ -23,7 +23,7 @@ namespace Uninstructed.Game
         public bool LoadFinished { get; private set; }
         public bool Paused { get; set; }
 
-        public void Start()
+        public void Awake()
         {
             var existingDirector = FindObjectOfType<GameDirector>();
             if (existingDirector != this && existingDirector != null)
@@ -44,7 +44,6 @@ namespace Uninstructed.Game
         {
             LoadGameSceneAsync(() =>
             {
-                World.MapName = settings.MapName;
                 WorldGenerator.Generate(settings, World);
             });
         }
@@ -88,14 +87,19 @@ namespace Uninstructed.Game
             yield return null;
 
             Destroy(World.ContentParent);
+            yield return new WaitForEndOfFrame();
+
             World = null;
             PlayerController = null;
+            GarbageCollector.CollectIncremental(5 * 1000 * 1000);
+            yield return null;
 
             var sceneLoading = SceneManager.LoadSceneAsync("MainMenu");
             sceneLoading.priority = int.MaxValue;
             sceneLoading.allowSceneActivation = true;
+            yield return null;
 
-            var progress = sceneLoading.progress;
+            var progress = 0f;
             while (!sceneLoading.isDone)
             {
                 var newProgress = sceneLoading.progress;

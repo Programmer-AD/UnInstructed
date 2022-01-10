@@ -14,7 +14,7 @@ namespace Uninstructed.Game.Content.Blocks
             drops = new();
         }
 
-        public void Start()
+        public void Awake()
         {
             var block = GetComponent<Block>();
             block.Break += OnBlockBreak;

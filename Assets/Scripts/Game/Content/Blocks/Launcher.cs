@@ -36,7 +36,7 @@ namespace Uninstructed.Game.Content.Blocks
             requiredItems = new();
         }
 
-        public void Start()
+        public void Awake()
         {
             renderer = GetComponent<SpriteRenderer>();
 
@@ -66,7 +66,7 @@ namespace Uninstructed.Game.Content.Blocks
 
         public void Load(Dictionary<string, object> data, GameObjectFactory factory)
         {
-            activated = (bool)data["activated"];
+            Activated = (bool)data["activated"];
         }
 
         public void Save(Dictionary<string, object> data)

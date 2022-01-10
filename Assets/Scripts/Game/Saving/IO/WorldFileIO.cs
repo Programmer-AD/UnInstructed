@@ -39,22 +39,20 @@ namespace Uninstructed.Game.Saving.IO
             var previewData = instanceData.CopyPreview();
             formatter.Serialize(stream, previewData);
             formatter.Serialize(stream, instanceData);
-            stream.Close();
         }
 
         public GameWorldPreviewData LoadPreview(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             var result = formatter.Deserialize(stream);
-            stream.Close();
             return (GameWorldPreviewData)result;
         }
         public GameWorldData Load(string filePath)
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            var preview = formatter.Deserialize(stream);
+            var formatter=new BinaryFormatter();
+            _ = formatter.Deserialize(stream);
             var result = formatter.Deserialize(stream);
-            stream.Close();
             return (GameWorldData)result;
         }
 

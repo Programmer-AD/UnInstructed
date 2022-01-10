@@ -18,7 +18,7 @@ namespace Uninstructed.Game.Content.Blocks
             recipes = new();
         }
 
-        public void Start()
+        public void Awake()
         {
             indexedRecipes = recipes.ToDictionary(x => x.Name.ToLower(), x => x);
 

@@ -42,6 +42,7 @@ namespace Uninstructed.Game.Mapping
         {
             this.settings = settings;
             this.world = world;
+            world.MapName = settings.MapName;
             map = new BlockType[settings.Width, settings.Height];
 
             MakeWorld();
