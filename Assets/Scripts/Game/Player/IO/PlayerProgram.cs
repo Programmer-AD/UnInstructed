@@ -31,7 +31,7 @@ namespace Uninstructed.Game.Player.IO
 
         public void Start()
         {
-            if (!working)
+            if (!Working)
             {
                 process.Start();
                 working = true;

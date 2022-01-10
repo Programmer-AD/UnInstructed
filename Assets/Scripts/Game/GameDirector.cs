@@ -143,7 +143,7 @@ namespace Uninstructed.Game
             yield return null;
         }
 
-        private IEnumerator SceneSwitch_UnloadOld(IEnumerator<float> oldSceneUnload = null)
+        private IEnumerator SceneSwitch_UnloadOld(IEnumerator<float> oldSceneUnload)
         {
             loadingScreen.SetProgress(0);
             loadingScreen.Text = "Выгрузка...";
@@ -171,7 +171,7 @@ namespace Uninstructed.Game
             }
         }
 
-        private IEnumerator SceneSwitch_LoadNew(GameObject newScenePrefab, IEnumerator<float> newSceneLoad = null)
+        private IEnumerator SceneSwitch_LoadNew(GameObject newScenePrefab, IEnumerator<float> newSceneLoad)
         {
             loadingScreen.Text = "Загрузка...";
             loadingScreen.SetProgress(0);
