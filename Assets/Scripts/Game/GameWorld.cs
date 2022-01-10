@@ -19,23 +19,9 @@ namespace Uninstructed.Game
 
         public Entity Player { get; private set; }
 
-        public GameObject ContentParent { get; private set; }
-
         public void Init()
         {
-            ContentParent = new();
-            var contentTransform = ContentParent.transform;
-            foreach (var entity in Entities)
-            {
-                entity.transform.SetParent(contentTransform, true);
-            }
-            foreach (var item in DroppedItems)
-            {
-                item.transform.SetParent(contentTransform, true);
-            }
-            Map.Init(contentTransform);
-
-
+            Map.Init();
             Player = Entities.First(x => x.Type == EntityType.Player);
         }
 

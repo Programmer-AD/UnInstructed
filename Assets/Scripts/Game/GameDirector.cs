@@ -88,7 +88,7 @@ namespace Uninstructed.Game
             buildingScreen.Open();
             yield return null;
 
-            Destroy(World.ContentParent);
+            Factory.DestroyContext();
             yield return new WaitForEndOfFrame();
 
             World = null;
@@ -149,6 +149,7 @@ namespace Uninstructed.Game
             buildingScreen.Open();
             yield return null;
 
+            Factory.CreateContext();
             World = new GameWorld();
             buildingScreen.SetProgress(0.05f);
             yield return null;

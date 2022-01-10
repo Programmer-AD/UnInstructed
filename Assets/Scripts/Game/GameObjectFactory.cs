@@ -4,6 +4,7 @@ using System.Linq;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Saving.Models;
+using UnityEditor;
 using UnityEngine;
 
 namespace Uninstructed.Game
@@ -20,17 +21,30 @@ namespace Uninstructed.Game
 
         public GameDirector Director { get; }
 
+        private Transform containerTransform;
+
         public GameObjectFactory(GameDirector director)
         {
             Director = director;
 
-            blocks = GetStructured<BlockType, Block, BlockData>("Block");
-            entities = GetStructured<EntityType, Entity, EntityData>("Entity");
-            items = GetStructured<ItemType, Item, ItemData>("Item");
+            blocks = LoadStructured<BlockType, Block, BlockData>("Block");
+            entities = LoadStructured<EntityType, Entity, EntityData>("Entity");
+            items = LoadStructured<ItemType, Item, ItemData>("Item");
 
             blocks.TryGetValue(BlockType.Unknown, out unknownBlock);
             entities.TryGetValue(EntityType.Unknown, out unknownEntity);
             items.TryGetValue(ItemType.Unknown, out unknownItem);
+        }
+
+        public void CreateContext()
+        {
+            var container = new GameObject("GameContentContainer");
+            containerTransform = container.transform;
+        }
+
+        public void DestroyContext()
+        {
+            UnityEngine.Object.Destroy(containerTransform);
         }
 
         public Entity Load(EntityData data)
@@ -68,9 +82,7 @@ namespace Uninstructed.Game
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
         {
-            var prefab = GetPrefab(memento.Type, unknown, prefabs);
-            var result = UnityEngine.Object.Instantiate(prefab);
-            result.Director = Director;
+            var result = CreateEmpty<TEnum, TMemento, TObject>(memento.Type, unknown, prefabs);
             result.Load(memento, this);
             return result;
         }
@@ -80,10 +92,20 @@ namespace Uninstructed.Game
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
         {
+            var result = CreateEmpty<TEnum, TMemento, TObject>(type, unknown, prefabs);
+            result.InitDefault(this);
+            return result;
+}
+
+        private TObject CreateEmpty<TEnum, TMemento, TObject>(TEnum type, TObject unknown, Dictionary<TEnum, TObject> prefabs)
+            where TObject : GameObjectBase<TEnum, TMemento>
+            where TMemento : GameObjectData<TEnum>, new()
+            where TEnum : Enum
+        {
             var prefab = GetPrefab(type, unknown, prefabs);
             var result = UnityEngine.Object.Instantiate(prefab);
+            result.transform.SetParent(containerTransform);
             result.Director = Director;
-            result.InitDefault(this);
             return result;
         }
 
@@ -99,7 +121,7 @@ namespace Uninstructed.Game
             return unknown;
         }
 
-        private Dictionary<TEnum, TObject> GetStructured<TEnum, TObject, TMemento>(string path)
+        private Dictionary<TEnum, TObject> LoadStructured<TEnum, TObject, TMemento>(string path)
             where TObject : GameObjectBase<TEnum, TMemento>
             where TMemento : GameObjectData<TEnum>, new()
             where TEnum : Enum
