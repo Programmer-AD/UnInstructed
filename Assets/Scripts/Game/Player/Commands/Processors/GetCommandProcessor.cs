@@ -66,7 +66,7 @@ namespace Uninstructed.Game.Player.Commands.Processors
                     break;
                 case "rotation":
                     {
-                        var angle = player.transform.rotation.eulerAngles.x;
+                        var angle = player.transform.rotation.eulerAngles.z;
                         stringBuilder.Append(angle);
                     }
                     break;

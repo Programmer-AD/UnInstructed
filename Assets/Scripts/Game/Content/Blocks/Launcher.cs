@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using Uninstructed.Game.Main;
 using Uninstructed.Game.Saving.Interfaces;
 using UnityEngine;
@@ -46,21 +47,32 @@ namespace Uninstructed.Game.Content.Blocks
 
         private void OnInteracted(Entity entity, Block block, string[] command)
         {
-            if (!activated && command.Length > 0 && command[0] == "launch")
+            if (command.Length > 0)
             {
-                foreach (var (requiredType, requiredCount) in requiredItems)
+                switch (command[0])
                 {
-                    var count = entity.Inventory.TotalCount(requiredType);
-                    if (count < requiredCount)
-                    {
-                        return;
-                    }
+                    case "activate":
+                        if (!activated)
+                        {
+                            foreach (var (requiredType, requiredCount) in requiredItems)
+                            {
+                                var count = entity.Inventory.TotalCount(requiredType);
+                                if (count < requiredCount)
+                                {
+                                    return;
+                                }
+                            }
+                            foreach (var (requiredType, requiredCount) in requiredItems)
+                            {
+                                entity.Inventory.Remove(requiredType, requiredCount);
+                            }
+                            activated = true;
+                        }
+                        break;
+                    case "status":
+                        entity.Director.PlayerController.OuterResult = activated ? "1" : "0";
+                        break;
                 }
-                foreach (var (requiredType, requiredCount) in requiredItems)
-                {
-                    entity.Inventory.Remove(requiredType, requiredCount);
-                }
-                activated = true;
             }
         }
 

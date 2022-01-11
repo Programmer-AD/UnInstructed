@@ -11,6 +11,7 @@ namespace Uninstructed.Game.Player
     public class PlayerController
     {
         public Entity Player { get; private set; }
+        public string OuterResult;
 
         private PlayerProgram program;
         private readonly PrimaryCommandProcessor commandProcessor;
@@ -96,11 +97,18 @@ namespace Uninstructed.Game.Player
                 var input = program.ReadLine();
                 if (input != null)
                 {
+                    OuterResult = null;
                     var command = new Command(input);
                     if (!Player.Busy && (started || command.Type != CommandType.Player))
                     {
                         var result = commandProcessor.Process(command);
                         yield return Player.StartCoroutine(WaitUntilPlayerBusy());
+                        if (result.Status == ProcessingStatus.Ok 
+                            && string.IsNullOrEmpty(result.Output)
+                            && !string.IsNullOrEmpty(OuterResult))
+                        {
+                            result = ProcessingResult.Ok(OuterResult);
+                        }
                         PrintResult(result);
                     }
                 }

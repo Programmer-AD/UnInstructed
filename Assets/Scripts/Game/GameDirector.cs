@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Uninstructed.Game.Mapping;
 using Uninstructed.Game.Player;
 using Uninstructed.Game.Saving.IO;
+using Uninstructed.UI;
 using Uninstructed.UI.Components;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -17,6 +18,8 @@ namespace Uninstructed.Game
 
         [SerializeField]
         private LoadingScreen loadingScreen;
+
+        private GameCameraController cameraController;
 
         public WorldFileIO MapFileIO { get; private set; }
         public GameObjectFactory Factory { get; private set; }
@@ -33,6 +36,7 @@ namespace Uninstructed.Game
 
         public void Awake()
         {
+            cameraController = FindObjectOfType<GameCameraController>();
             loadingScreen = FindObjectOfType<LoadingScreen>();
             Application.wantsToQuit += () =>
             {
@@ -210,6 +214,7 @@ namespace Uninstructed.Game
             PlayerController = new(World.Player);
             PlayerController.WorkStart += () => Paused = false;
             PlayerController.ProgramStopped += () => Paused = true;
+            cameraController.MoveToPlayer();
             yield return 1;
         }
     }

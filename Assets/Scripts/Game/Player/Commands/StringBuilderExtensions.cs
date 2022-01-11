@@ -70,7 +70,7 @@ namespace Uninstructed.Game.Player.Commands
                 return builder;
             }
             return builder.AppendShortInfo(entity)
-                .Append(' ').Append(entity.transform.eulerAngles.x)
+                .Append(' ').Append(entity.transform.eulerAngles.z)
                 .Append(' ').Append(entity.Health);
         }
 

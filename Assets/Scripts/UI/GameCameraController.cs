@@ -4,14 +4,15 @@ using UnityEngine;
 
 namespace Uninstructed.UI
 {
-    public class GameCameraControler : MonoBehaviour
+    public class GameCameraController : MonoBehaviour
     {
         [SerializeField]
         private float moveSpeed, scaleSpeed, minScale, maxScale;
 
         private GameDirector director;
         private new Camera camera;
-        private bool startCentralized = false;
+
+        private bool binded;
 
         public void Reset()
         {
@@ -25,6 +26,7 @@ namespace Uninstructed.UI
         {
             camera = GetComponent<Camera>();
             director = FindObjectOfType<GameDirector>();
+            binded = false;
         }
 
         public void Update()
@@ -46,15 +48,23 @@ namespace Uninstructed.UI
                     camera.transform.Translate(-dx, -dy, 0);
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space) || !startCentralized)
+                if (binded || Input.GetKeyDown(KeyCode.Space))
                 {
-                    var playerPosition = director.World.Player.transform.position;
-                    var cameraPosition = camera.transform.position;
-                    camera.transform.position = new Vector3(playerPosition.x, playerPosition.y, cameraPosition.z);
+                    MoveToPlayer();
+                }
 
-                    startCentralized = true;
+                if (Input.GetKeyDown(KeyCode.B))
+                {
+                    binded = !binded;
                 }
             }
+        }
+
+        public void MoveToPlayer()
+        {
+            var playerPosition = director.World.Player.transform.position;
+            var cameraPosition = camera.transform.position;
+            camera.transform.position = new Vector3(playerPosition.x, playerPosition.y, cameraPosition.z);
         }
     }
 }
