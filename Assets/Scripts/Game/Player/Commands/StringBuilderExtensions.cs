@@ -29,7 +29,8 @@ namespace Uninstructed.Game.Player.Commands
             if (withPosition)
             {
                 var position = item.transform.position;
-                builder.AppendPosition(position);
+                builder.Append(' ')
+                    .AppendPosition(position);
             }
             return builder;
         }
