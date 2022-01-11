@@ -116,23 +116,9 @@ namespace Uninstructed.Game
             currentScene.SetActive(false);
             yield return null;
 
-            var unload = SceneSwitch_UnloadOld(oldSceneUnload);
-            while (unload.MoveNext())
-            {
-                yield return unload.Current;
-            }
-
-            var cleaning = SceneSwitch_CleanMemory();
-            while (cleaning.MoveNext())
-            {
-                yield return cleaning.Current;
-            }
-
-            var load = SceneSwitch_LoadNew(newScenePrefab, newSceneLoad);
-            while (load.MoveNext())
-            {
-                yield return load.Current;
-            }
+            yield return StartCoroutine(SceneSwitch_UnloadOld(oldSceneUnload));
+            yield return StartCoroutine(SceneSwitch_CleanMemory());
+            yield return StartCoroutine(SceneSwitch_LoadNew(newScenePrefab, newSceneLoad));
 
             loadingScreen.Close();
             currentScene.SetActive(true);
@@ -148,11 +134,7 @@ namespace Uninstructed.Game
             loadingScreen.Text = "Выгрузка...";
             yield return null;
 
-            var unload = ProgressableAction(oldSceneUnload);
-            while (unload.MoveNext())
-            {
-                yield return null;
-            }
+            yield return ProgressableAction(oldSceneUnload);
 
             Destroy(currentScene);
             loadingScreen.SetProgress(1);
@@ -178,14 +160,8 @@ namespace Uninstructed.Game
             currentScene.SetActive(false);
             yield return null;
 
-            if (newSceneLoad != null)
-            {
-                var load = ProgressableAction(newSceneLoad);
-                while (load.MoveNext())
-                {
-                    yield return null;
-                }
-            }
+            yield return ProgressableAction(newSceneLoad);
+
             loadingScreen.SetProgress(1);
             yield return null;
         }
