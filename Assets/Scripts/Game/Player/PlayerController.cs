@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Uninstructed.Game.Main;
 using Uninstructed.Game.Player.Commands;
 using Uninstructed.Game.Player.Commands.Models;
 using Uninstructed.Game.Player.IO;
+using UnityEngine;
 
 namespace Uninstructed.Game.Player
 {
@@ -14,16 +16,14 @@ namespace Uninstructed.Game.Player
         public Entity Player { get; private set; }
 
         private PlayerProgram program;
-        private readonly ConcurrentQueue<Command> commandQueue;
         private readonly PrimaryCommandProcessor commandProcessor;
 
-        private CancellationTokenSource tokenSource;
-        private Task prereadTask, executeTask;
+        private Coroutine executingRoutine;
 
-        private volatile bool working;
+        private bool working;
         public bool Working => working;
 
-        private volatile bool started;
+        private bool started;
         public bool Started => started;
 
         public PlayerController(Entity player)
@@ -31,7 +31,6 @@ namespace Uninstructed.Game.Player
             Player = player;
 
             commandProcessor = new(player, OnWorkStart, OnWorkStop);
-            commandQueue = new();
 
             working = false;
             started = false;
@@ -43,18 +42,14 @@ namespace Uninstructed.Game.Player
             {
                 return false;
             }
-
             try
             {
                 program = new(command, arguments);
                 program.Start();
 
-                commandQueue.Clear();
                 working = true;
-                tokenSource = new();
 
-                prereadTask = Task.Run(PrereadTaskMain, tokenSource.Token);
-                executeTask = Task.Run(ExecuteTaskMain, tokenSource.Token);
+                executingRoutine = Player.StartCoroutine(ExecuteTaskMain());
 
                 return true;
             }
@@ -70,17 +65,19 @@ namespace Uninstructed.Game.Player
             working = false;
             started = false;
 
-            tokenSource?.Cancel();
+            if (executingRoutine != null)
+            {
+                Player.StopCoroutine(executingRoutine);
+                executingRoutine = null;
+            }
 
-            program?.Stop();
-            prereadTask = null;
-            executeTask = null;
-            program = null;
+            if (program != null)
+            {
+                program.Stop();
+                ProgramStopped?.Invoke();
+            }
 
-            tokenSource?.Dispose();
-            tokenSource = null;
-
-            ProgramStopped?.Invoke();
+            Player.Stop();
         }
 
         public event Action WorkStart;
@@ -95,56 +92,41 @@ namespace Uninstructed.Game.Player
             working = false;
         }
 
-        private async Task PrereadTaskMain()
+        private IEnumerator ExecuteTaskMain()
         {
-            while (working && program.Working)
+            while (working && (program.Working || program.HasData))
             {
-                var input = await program.ReadLineAsync();
+                var input = program.ReadLine();
                 if (input != null)
                 {
                     var command = new Command(input);
-                    commandQueue.Enqueue(command);
-                }
-            }
-        }
-
-        private async Task ExecuteTaskMain()
-        {
-            while (working && (program.Working || commandQueue.Count > 0))
-            {
-                try
-                {
-                    if (!Player.Busy && commandQueue.TryDequeue(out var command) && (started || command.Type != CommandType.Player))
+                    if (!Player.Busy && (started || command.Type != CommandType.Player))
                     {
                         var result = commandProcessor.Process(command);
-                        await WaitUntilPlayerBusy();
-                        await PrintResult(result);
+                        yield return Player.StartCoroutine(WaitUntilPlayerBusy());
+                        PrintResult(result);
                     }
-                }
-                catch (Exception ex)
-                {
-                    UnityEngine.Debug.LogException(ex);
                 }
             }
             Stop();
         }
 
-        private async Task WaitUntilPlayerBusy()
+        private IEnumerator WaitUntilPlayerBusy()
         {
-            while (Player.Busy)
+            while (Player.Busy && working)
             {
-                await Task.Yield();
+                yield return null;
             }
         }
 
-        private async Task PrintResult(ProcessingResult result)
+        private void PrintResult(ProcessingResult result)
         {
             var status = result.Status.ToString().ToLower();
-            await program.WriteLineAsync(status);
+            program.WriteLine(status);
 
             if (!string.IsNullOrEmpty(result.Output))
             {
-                await program.WriteLineAsync(result.Output);
+                program.WriteLine(result.Output);
             }
         }
     }

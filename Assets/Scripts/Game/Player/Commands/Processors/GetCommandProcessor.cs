@@ -70,6 +70,12 @@ namespace Uninstructed.Game.Player.Commands.Processors
                         stringBuilder.Append(angle);
                     }
                     break;
+                case "health":
+                    {
+                        var health = player.Health;
+                        stringBuilder.Append(health);
+                    }
+                    break;
                 case "inventory":
                     {
                         stringBuilder.Append(player.InventorySize).AppendLine();

@@ -211,10 +211,10 @@ namespace Uninstructed.Game
             yield return 0.1f;
 
             Factory.DestroyContext();
-            yield return 0.9f;
+            yield return 0.95f;
 
-            World = null;
             PlayerController = null;
+            World = null;
             yield return 1f;
         }
 

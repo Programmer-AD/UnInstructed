@@ -1,17 +1,24 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Uninstructed.Game.Player.IO
 {
     internal class PlayerProgram
     {
+        private readonly ConcurrentQueue<string> queue;
         private readonly Process process;
+
+        private bool started = false, stopped = false;
 
         private bool working = false;
         public bool Working => working && !process.HasExited;
+        public bool HasData => queue.Count > 0;
 
         public PlayerProgram(string command, string args)
         {
+            queue = new ConcurrentQueue<string>();
             process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
@@ -26,37 +33,56 @@ namespace Uninstructed.Game.Player.IO
                     FileName = command,
                     Arguments = args
                 },
+                EnableRaisingEvents = true
             };
+            process.OutputDataReceived += OnInput;
         }
 
         public void Start()
         {
-            if (!Working)
+            if (!started)
             {
                 process.Start();
+                process.BeginOutputReadLine();
                 working = true;
+                started = true;
             }
         }
 
         public void Stop()
         {
-            working = false;
-            process.Dispose();
+            if (!stopped)
+            {
+                stopped = true;
+                working = false;
+                process.CancelOutputRead();
+                process.Kill();
+                process.WaitForExit();
+                process.Dispose();
+            }
         }
 
-        public async Task<string> ReadLineAsync()
+        public string ReadLine()
         {
-            var result = await process.StandardOutput.ReadLineAsync();
-            return result;
+            if (queue.TryDequeue(out var result))
+            {
+                return result;
+            }
+            return null;
         }
 
-        public async Task WriteLineAsync(string data)
+        public void WriteLine(string data)
         {
             if (Working)
             {
-                await process.StandardInput.WriteLineAsync(data);
-                await process.StandardInput.FlushAsync();
+                process.StandardInput.WriteLine(data);
+                process.StandardInput.Flush();
             }
+        }
+
+        private void OnInput(object _, DataReceivedEventArgs args)
+        {
+            queue.Enqueue(args.Data);
         }
     }
 }

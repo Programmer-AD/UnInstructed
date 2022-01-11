@@ -48,6 +48,11 @@ namespace Uninstructed.Game.Main
             action = Movement(distance);
         }
 
+        public void Stop()
+        {
+            action = null;
+        }
+
         public void SetRotate(float angle, bool to = false)
         {
             action = Rotation(angle, to);
