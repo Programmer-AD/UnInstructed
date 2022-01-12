@@ -6,7 +6,7 @@ namespace Uninstructed.UI.Components
     public class Notifications : MonoBehaviour
     {
         [SerializeField]
-        private Image pauseNotify, connectNotify, startNotify;
+        private Image pauseNotify, connectNotify, initNotify, startNotify;
 
         [SerializeField]
         private GameSceneManager sceneManager;
@@ -33,10 +33,15 @@ namespace Uninstructed.UI.Components
                 var showPause = sceneManager.GameDirector.Paused;
                 pauseNotify.gameObject.SetActive(showPause);
 
-                var showConnect = showPause && !sceneManager.GameDirector.PlayerController.Working;
+                var playerController = sceneManager.GameDirector.PlayerController;
+
+                var showConnect = showPause && !playerController.Working;
                 connectNotify.gameObject.SetActive(showConnect);
 
-                var showStart = showPause && !showConnect && !sceneManager.GameDirector.PlayerController.Started;
+                var showInit = showPause && !showConnect && !playerController.Inited;
+                initNotify.gameObject.SetActive(showInit);
+
+                var showStart = showPause && !showInit && !playerController.Started;
                 startNotify.gameObject.SetActive(showStart);
             }
         }

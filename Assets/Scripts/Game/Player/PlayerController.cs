@@ -18,6 +18,9 @@ namespace Uninstructed.Game.Player
 
         private Coroutine executingRoutine;
 
+        private bool inited;
+        public bool Inited => inited;
+
         private bool working;
         public bool Working => working;
 
@@ -28,10 +31,11 @@ namespace Uninstructed.Game.Player
         {
             Player = player;
 
-            commandProcessor = new(player, OnWorkStart, OnWorkStop);
+            commandProcessor = new(player, OnWorkInit, OnWorkStart, OnWorkStop);
 
             working = false;
             started = false;
+            inited = false;
         }
 
         public bool TryStart(string command, string arguments)
@@ -42,6 +46,10 @@ namespace Uninstructed.Game.Player
             }
             try
             {
+                working = false;
+                started = false;
+                inited = false;
+
                 program = new(command, arguments);
                 program.Start();
 
@@ -62,6 +70,7 @@ namespace Uninstructed.Game.Player
         {
             working = false;
             started = false;
+            inited = false;
 
             if (executingRoutine != null)
             {
@@ -78,9 +87,15 @@ namespace Uninstructed.Game.Player
             Player.Stop();
         }
 
+        private void OnWorkInit()
+        {
+            inited = true;
+        }
+
         public event Action WorkStart;
         private void OnWorkStart()
         {
+            inited = true;
             started = true;
             WorkStart?.Invoke();
         }
@@ -99,11 +114,13 @@ namespace Uninstructed.Game.Player
                 {
                     OuterResult = null;
                     var command = new Command(input);
-                    if (!Player.Busy && (started || command.Type != CommandType.Player))
+                    if (!Player.Busy && (
+                        inited && (started || command.Type != CommandType.Player) 
+                        || command.Type == CommandType.Work))
                     {
                         var result = commandProcessor.Process(command);
                         yield return Player.StartCoroutine(WaitUntilPlayerBusy());
-                        if (result.Status == ProcessingStatus.Ok 
+                        if (result.Status == ProcessingStatus.Ok
                             && string.IsNullOrEmpty(result.Output)
                             && !string.IsNullOrEmpty(OuterResult))
                         {
@@ -111,6 +128,10 @@ namespace Uninstructed.Game.Player
                         }
                         PrintResult(result);
                     }
+                }
+                else
+                {
+                    yield return null;
                 }
             }
             Stop();

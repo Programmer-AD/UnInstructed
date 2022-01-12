@@ -5,11 +5,11 @@ namespace Uninstructed.Game.Player.Commands.Processors
 {
     internal class WorkCommandProcessor : ICommandProcessor
     {
-        private readonly Action startCallback;
-        private readonly Action stopCallback;
+        private readonly Action initCallback, startCallback, stopCallback;
 
-        public WorkCommandProcessor(Action startCallback, Action stopCallback)
+        public WorkCommandProcessor(Action initCallback, Action startCallback, Action stopCallback)
         {
+            this.initCallback = initCallback;
             this.startCallback = startCallback;
             this.stopCallback = stopCallback;
         }
@@ -22,6 +22,9 @@ namespace Uninstructed.Game.Player.Commands.Processors
             }
             switch (command.Args[0])
             {
+                case "init":
+                    initCallback();
+                    return ProcessingResult.Ok();
                 case "start":
                     startCallback();
                     return ProcessingResult.Ok();

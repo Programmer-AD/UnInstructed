@@ -49,7 +49,7 @@ namespace Uninstructed.Game.Player.IO
 
         public void Stop()
         {
-            if (!stopped)
+            if (started && !stopped)
             {
                 stopped = true;
                 working = false;
