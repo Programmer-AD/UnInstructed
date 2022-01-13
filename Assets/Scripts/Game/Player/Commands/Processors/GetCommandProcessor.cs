@@ -147,6 +147,10 @@ namespace Uninstructed.Game.Player.Commands.Processors
                 for (var x = sx; x < ex; x++)
                 {
                     stringBuilder.AppendShortInfo(world.Map[x, y]);
+                    if (x < ex - 1)
+                    {
+                        stringBuilder.Append(' ');
+                    }
                 }
                 stringBuilder.AppendLine();
             }
