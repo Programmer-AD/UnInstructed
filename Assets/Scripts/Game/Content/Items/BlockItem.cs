@@ -30,10 +30,10 @@ namespace Uninstructed.Game.Content.Items
             var block = map[x, y];
             if (block == null)
             {
-                item.Count--;
                 block = entity.Director.Factory.Create(places);
                 block.transform.position = new Vector3(x, y);
                 map[x, y] = block;
+                item.Count--;
             }
 
         }

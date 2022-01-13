@@ -48,12 +48,11 @@ namespace Uninstructed.Game.Main
                     {
                         emptySlot.Item = UnityEngine.Object.Instantiate(item);
                         emptySlot.Item.OnScene = false;
+                        emptySlot.Item.Director = item.Director;
                         emptySlot.Item.Count = item.Count;
                         item.Count = 0;
                     }
                 }
-
-                item.Optimize();
             }
         }
 

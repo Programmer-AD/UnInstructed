@@ -72,8 +72,7 @@ namespace Uninstructed.Game.Main
         {
             if (Count == 0)
             {
-                OnScene = false;
-                Destroy(this);
+                Destroy(gameObject);
 
                 Director.World.SetItemsNeedUpdate();
             }
