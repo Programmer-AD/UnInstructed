@@ -22,7 +22,7 @@ namespace Uninstructed.Game.Content.Items
 
         private void OnUsedSingle(Entity entity, Item item)
         {
-            var position = entity.LookDirectionInt;
+            var position = entity.LookAtCoord;
             var x = position.x;
             var y = position.y;
 

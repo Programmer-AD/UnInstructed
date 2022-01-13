@@ -33,12 +33,19 @@ namespace Uninstructed.Game.Main
         }
 
         public Vector2 LookDirection => transform.up;
-        public Vector2Int LookDirectionInt => new((int)MathF.Round(LookDirection.x), (int)MathF.Round(LookDirection.y));
+        public Vector2Int LookAtCoord
+        {
+            get
+            {
+                var coord = (Vector2)transform.position + LookDirection;
+                return new((int)Math.Round(coord.x), (int)Math.Round(coord.y));
+            }
+        }
         public Block LookingAtBlock
         {
             get
             {
-                var coord = LookDirectionInt;
+                var coord = LookAtCoord;
                 return Director.World.Map[coord.x, coord.y];
             }
         }
