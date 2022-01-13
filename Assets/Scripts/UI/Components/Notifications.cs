@@ -16,6 +16,7 @@ namespace Uninstructed.UI.Components
             pauseNotify = null;
             connectNotify = null;
             sceneManager = null;
+            initNotify = null;
             startNotify = null;
         }
 

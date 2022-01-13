@@ -74,6 +74,8 @@ namespace Uninstructed.Game.Main
             {
                 OnScene = false;
                 Destroy(this);
+
+                Director.World.SetItemsNeedUpdate();
             }
         }
 
@@ -92,6 +94,8 @@ namespace Uninstructed.Game.Main
             dropped.dropper = dropper;
             dropped.transform.position = dropper.transform.position;
             dropped.OnScene = true;
+
+            Director.World.SetItemsNeedUpdate();
         }
 
         public event Action<Entity, Item> UsedSingle;

@@ -168,14 +168,14 @@ namespace Uninstructed.Game.Player.Commands.Processors
             switch (args[0])
             {
                 case "entity":
-                    stringBuilder.Append(world.Entities.Count).AppendLine();
+                    stringBuilder.Append(world.Entities.Length).AppendLine();
                     foreach (var entity in world.Entities)
                     {
                         stringBuilder.AppendShortInfo(entity).AppendLine();
                     }
                     break;
                 case "item":
-                    stringBuilder.Append(world.DroppedItems.Count).AppendLine();
+                    stringBuilder.Append(world.DroppedItems.Length).AppendLine();
                     foreach (var item in world.DroppedItems)
                     {
                         stringBuilder.AppendShortInfo(item, true).AppendLine();
@@ -226,7 +226,7 @@ namespace Uninstructed.Game.Player.Commands.Processors
                         }
                         if (int.TryParse(args[1], out var index))
                         {
-                            if (index < 0 || index > world.Entities.Count)
+                            if (index < 0 || index > world.Entities.Length)
                             {
                                 return ProcessingResult.Error("Entity list index out of range at get info entity");
                             }

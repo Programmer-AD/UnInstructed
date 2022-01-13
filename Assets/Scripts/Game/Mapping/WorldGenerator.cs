@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Uninstructed.Game.Content.Enums;
-using Uninstructed.Game.Main;
 
 namespace Uninstructed.Game.Mapping
 {
@@ -59,8 +58,6 @@ namespace Uninstructed.Game.Mapping
         {
             world.MapName = settings.MapName;
             world.Map = new Map(settings.Width, settings.Height);
-            world.Entities = new List<Entity>();
-            world.DroppedItems = new List<Item>();
 
             RectangleFor(0, 0, settings.Width, settings.Height, (x, y) =>
             {
@@ -86,7 +83,6 @@ namespace Uninstructed.Game.Mapping
         {
             var entity = factory.Create(entityType);
             entity.transform.position = new UnityEngine.Vector3(x, y);
-            world.Entities.Add(entity);
         }
 
         private void InitItem(ItemType itemType, int count, int x, int y)
@@ -102,7 +98,6 @@ namespace Uninstructed.Game.Mapping
             }
             item.Count = count;
             item.transform.position = new UnityEngine.Vector3(x, y);
-            world.DroppedItems.Add(item);
         }
 
         private void AddEntity(EntityType entityType, int x, int y)

@@ -48,6 +48,7 @@ namespace Uninstructed.Game
 
         public Entity Load(EntityData data)
         {
+            Director.World.SetEntitiesNeedUpdate();
             return Load(data, unknownEntity, entities);
         }
 
@@ -58,11 +59,13 @@ namespace Uninstructed.Game
 
         public Item Load(ItemData data)
         {
+            Director.World.SetItemsNeedUpdate();
             return Load(data, unknownItem, items);
         }
 
         public Entity Create(EntityType type)
         {
+            Director.World.SetEntitiesNeedUpdate();
             return Create<EntityType, EntityData, Entity>(type, unknownEntity, entities);
         }
 
@@ -73,6 +76,7 @@ namespace Uninstructed.Game
 
         public Item Create(ItemType type)
         {
+            Director.World.SetItemsNeedUpdate();
             return Create<ItemType, ItemData, Item>(type, unknownItem, items);
         }
 

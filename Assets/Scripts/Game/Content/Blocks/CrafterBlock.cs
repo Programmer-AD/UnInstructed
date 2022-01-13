@@ -59,7 +59,7 @@ namespace Uninstructed.Game.Content.Blocks
         }
 
         [Serializable]
-        private struct CraftRecipe
+        public struct CraftRecipe
         {
             public string Name;
             public List<ItemMiniInfo> Required;

@@ -115,7 +115,7 @@ namespace Uninstructed.Game.Player
                     OuterResult = null;
                     var command = new Command(input);
                     if (!Player.Busy && (
-                        inited && (started || command.Type != CommandType.Player) 
+                        inited && (started || command.Type != CommandType.Player)
                         || command.Type == CommandType.Work))
                     {
                         var result = commandProcessor.Process(command);

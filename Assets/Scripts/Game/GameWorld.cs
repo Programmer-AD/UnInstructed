@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Uninstructed.Game.Content.Enums;
 using Uninstructed.Game.Main;
@@ -11,17 +10,29 @@ namespace Uninstructed.Game
 {
     public class GameWorld : ISaveable<GameWorldData>
     {
-        public List<Entity> Entities { get; set; }
-        public List<Item> DroppedItems { get; set; }
+        private readonly LazyUpdateable<Entity[]> entitiesUpdateable;
+        public Entity[] Entities => entitiesUpdateable;
+
+        private readonly LazyUpdateable<Item[]> itemsUpdateable;
+        public Item[] DroppedItems => itemsUpdateable;
+
         public Map Map { get; set; }
         public string MapName { get; set; }
 
         public Entity Player { get; private set; }
 
+        public GameWorld()
+        {
+            entitiesUpdateable = new(_ => UnityEngine.Object.FindObjectsOfType<Entity>());
+            itemsUpdateable = new(_ => UnityEngine.Object.FindObjectsOfType<Item>());
+        }
+
         public void Init()
         {
             Map.Init();
             Player = Entities.First(x => x.Type == EntityType.Player);
+            entitiesUpdateable.ForceUpdate();
+            itemsUpdateable.ForceUpdate();
         }
 
         public void Load(GameWorldData memento, GameObjectFactory factory)
@@ -29,13 +40,20 @@ namespace Uninstructed.Game
             MapName = memento.MapName;
             Map = new Map();
             Map.Load(memento.Map, factory);
-            DroppedItems = memento.DroppedItems.Select(x => factory.Load(x)).ToList();
-            Entities = memento.Entities.Select(x => factory.Load(x)).ToList();
+
+            foreach (var item in memento.DroppedItems)
+            {
+                factory.Load(item);
+            }
+            foreach (var entity in memento.Entities)
+            {
+                factory.Load(entity);
+            }
         }
 
         public GameWorldData Save()
         {
-            Optimize();
+            RefreshData();
             var memento = new GameWorldData
             {
                 MapName = MapName,
@@ -48,11 +66,21 @@ namespace Uninstructed.Game
             return memento;
         }
 
-        public void Optimize()
+        public void SetItemsNeedUpdate()
         {
-            DroppedItems = DroppedItems.Where(x => x != null).ToList();
-            Entities = Entities.Where(x => x != null && !x.Dead).ToList();
+            itemsUpdateable.SetNeedUpdate();
+        }
+
+        public void SetEntitiesNeedUpdate()
+        {
+            entitiesUpdateable.SetNeedUpdate();
+        }
+
+        public void RefreshData()
+        {
             Map.Optimize();
+            itemsUpdateable.ForceUpdate();
+            entitiesUpdateable.ForceUpdate();
         }
     }
 }

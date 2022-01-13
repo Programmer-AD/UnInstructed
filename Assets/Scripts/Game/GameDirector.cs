@@ -34,6 +34,11 @@ namespace Uninstructed.Game
         public bool LoadFinished { get; private set; }
         public bool Paused { get; set; }
 
+        public void Reset()
+        {
+            MainMenuScenePrefab = null;
+            GameScenePrefab = null;
+        }
         public void Awake()
         {
             cameraController = FindObjectOfType<GameCameraController>();

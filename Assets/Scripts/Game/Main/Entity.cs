@@ -71,6 +71,8 @@ namespace Uninstructed.Game.Main
                 Death?.Invoke(this);
                 Dead = true;
                 Destroy(gameObject);
+
+                Director.World.SetEntitiesNeedUpdate();
             }
         }
 
