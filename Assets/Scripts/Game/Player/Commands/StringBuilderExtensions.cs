@@ -74,7 +74,7 @@ namespace Uninstructed.Game.Player.Commands
                 .Append(' ').Append(entity.Health);
         }
 
-        private static bool AppendOnNull(this StringBuilder builder, object obj)
+        private static bool AppendOnNull(this StringBuilder builder, MonoBehaviour obj)
         {
             if (obj == null)
             {
