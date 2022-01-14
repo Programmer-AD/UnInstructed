@@ -65,7 +65,7 @@ namespace Uninstructed.Game.Content.Blocks
                             {
                                 entity.Inventory.Remove(requiredType, requiredCount);
                             }
-                            activated = true;
+                            Activated = true;
                         }
                         break;
                     case "status":

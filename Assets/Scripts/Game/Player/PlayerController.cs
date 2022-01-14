@@ -80,8 +80,8 @@ namespace Uninstructed.Game.Player
 
             if (program != null)
             {
-                program.Stop();
                 ProgramStopped?.Invoke();
+                program.Stop();
             }
 
             Player.Stop();
