@@ -37,7 +37,7 @@ namespace Uninstructed.Game.Main
             set => gameObject.SetActive(value);
         }
 
-        public void OnTriggerEnter2D(Collider2D other)
+        public void OnTriggerStay2D(Collider2D other)
         {
 
             if (other.gameObject.TryGetComponent(out Entity entity))
@@ -46,14 +46,6 @@ namespace Uninstructed.Game.Main
                 {
                     entity.Inventory.Add(this);
                     Optimize();
-                }
-            }
-            else if (other.gameObject.TryGetComponent(out Item item))
-            {
-                if (item.Type == Type && Count + item.Count <= maxCount)
-                {
-                    item.Count += Count;
-                    Count = 0;
                 }
             }
         }
