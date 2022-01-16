@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +17,7 @@ namespace Uninstructed.UI.Components.Dialogs
         private TMP_Text statusText;
 
         [SerializeField]
-        private Button backButton, disconnectButton, loadButton;
+        private Button backButton, disconnectButton, loadButton, programSelectButton, argumentSelectButton;
 
         [SerializeField]
         private Color errorColor, successColor;
@@ -39,6 +40,8 @@ namespace Uninstructed.UI.Components.Dialogs
             backButton.onClick.AddListener(OnClickBack);
             loadButton.onClick.AddListener(OnClickLoad);
             disconnectButton.onClick.AddListener(OnClickDisconnect);
+            programSelectButton.onClick.AddListener(OnClickProgramSelect);
+            argumentSelectButton.onClick.AddListener(OnClickArgumentSelect);
         }
 
         public void Update()
@@ -84,6 +87,33 @@ namespace Uninstructed.UI.Components.Dialogs
                 statusText.color = errorColor;
                 statusText.text = "Ошибка подключения!\r\nПроверьте данные и повторите попытку";
             }
+        }
+
+        private void OnClickProgramSelect()
+        {
+            OpenFileSelect(path => commandInput.text = path);
+        }
+
+        private void OnClickArgumentSelect()
+        {
+            OpenFileSelect(path => argumentsInput.text = path);
+        }
+
+        private void OpenFileSelect(Action<string> onSelect)
+        {
+            var dialogTask = System.Threading.Tasks.Task.Run(() =>
+            {
+                using var dialog = new System.Windows.Forms.OpenFileDialog
+                {
+                    Multiselect = false,
+                    AddExtension = true,
+                };
+                var result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    onSelect(dialog.FileName);
+                }
+            });
         }
     }
 }
