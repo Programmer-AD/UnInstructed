@@ -48,7 +48,7 @@ namespace Uninstructed.UI
                     camera.transform.Translate(-dx, -dy, 0);
                 }
 
-                if (binded || Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
                     MoveToPlayer();
                 }
@@ -57,6 +57,10 @@ namespace Uninstructed.UI
                 {
                     binded = !binded;
                 }
+            }
+            if (binded)
+            {
+                MoveToPlayer();
             }
         }
 
