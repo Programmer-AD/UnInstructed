@@ -101,19 +101,8 @@ namespace Uninstructed.UI.Components.Dialogs
 
         private void OpenFileSelect(Action<string> onSelect)
         {
-            var dialogTask = System.Threading.Tasks.Task.Run(() =>
-            {
-                using var dialog = new System.Windows.Forms.OpenFileDialog
-                {
-                    Multiselect = false,
-                    AddExtension = true,
-                };
-                var result = dialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    onSelect(dialog.FileName);
-                }
-            });
+            var dialog = new OpenFileDialog();
+            dialog.Open(onSelect);
         }
     }
 }
