@@ -52,7 +52,7 @@ MonoBehaviour:
   maxDurability: 50
   canBreak: 1
   CanGoThrough: 0
-  BreakParticles: {fileID: 0}
+  BreakParticles: {fileID: 3686400434107945628, guid: 96145098da9092e4382eb3f742378e87, type: 3}
 --- !u!212 &8273775163489560773
 SpriteRenderer:
   m_ObjectHideFlags: 0
