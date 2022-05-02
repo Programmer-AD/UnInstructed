@@ -1,6 +1,6 @@
 # UnInstructed
 
-It's game where you should write program for robot to collect items and activate launcher
+It's game where you have to write program for robot to collect items and activate launcher
 
 All information about game and texture sources can be found in directory "Other" (Warning: information about game is written in ukranian language)
 
